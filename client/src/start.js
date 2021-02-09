@@ -5,7 +5,12 @@ let elem;
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
-    elem = <p>I am not the welcome route!!!!</p>;
+    elem = (
+        <>
+            <img src="/linux.jpg" />
+            <p>I am not the welcome route!!!!</p>
+        </>
+    );
 }
 
 ReactDOM.render(elem, document.querySelector("main"));
