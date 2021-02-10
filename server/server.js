@@ -9,6 +9,27 @@ const csurf = require("csurf");
 const { sendEmail } = require("./ses");
 const cryptoRandomString = require("crypto-random-string");
 
+const multer = require("multer");
+const uidSafe = require("uid-safe");
+
+const diskStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function (req, file, callback) {
+        uidSafe(24).then(function (uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    },
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152,
+    },
+});
+
 let sessionSecret;
 if (process.env.NODE_ENV === "production") {
     sessionSecret = process.env.sessionSecret;
@@ -45,6 +66,7 @@ app.use(function (req, res, next) {
 app.use(compression());
 
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
+app.use(express.static(path.join(__dirname, "..", "server", "uploads")));
 
 //
 
@@ -140,6 +162,17 @@ app.post("/login/userlogin", (req, res) => {
             console.log("err in emailCheck", err);
             res.json({ error: true });
         });
+});
+
+app.get("/user", async (req, res) => {
+    const userId = req.session.userId;
+    console.log("id in /user: ", req.session.userId);
+    console.log("req.body in /user: ", req.body);
+    console.log("req.params in /user: ", req.params);
+    let results = await db.getUserInfo(userId);
+    console.log("/user results: ", results.rows);
+
+    res.json(results.rows);
 });
 
 app.get("*", function (req, res) {
@@ -240,9 +273,29 @@ app.post("/password/reset/verify", (req, res) => {
 });
 
 //
-// app.post("/sendEmail", (req, res) => {
-//     sendEmail(x, y, z).then(() => console.log("Email sent"));
-// });
+app.post("/upload", uploader.single("file"), async (req, res) => {
+    const userId = req.session.userId;
+    console.log("id in /upload: ", userId);
+    console.log("filename in /upload: ", req.file.filename);
+    console.log("/upload here");
+
+    const url = req.file.filename;
+    console.log("url in /upload: ", url);
+
+    if (req.file) {
+        await db.insertImageUrl(userId, url);
+        let results2 = await db.getUserInfo(userId);
+        console.log("upload results: ", results2.rows);
+
+        res.json({
+            url: results2.rows[0].profile_pic_url,
+        });
+    } else {
+        res.json({
+            success: false,
+        });
+    }
+});
 
 //
 //

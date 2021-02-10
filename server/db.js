@@ -57,3 +57,16 @@ module.exports.insertNewPW = (email, password) => {
     const params = [email, password];
     return db.query(q, params);
 };
+
+module.exports.insertImageUrl = (id, url) => {
+    const q = `UPDATE users SET profile_pic_url = ($2) WHERE id =($1)`;
+    const params = [id, url];
+    return db.query(q, params);
+};
+
+module.exports.getUserInfo = (id) => {
+    const q = `SELECT * FROM users
+    WHERE id = ($1)`;
+    const params = [id];
+    return db.query(q, params);
+};

@@ -41,7 +41,6 @@ export default class ResetPassword extends React.Component {
                         renderView: this.state.renderView + 1,
                         error: false,
                     });
-                    userInput = {};
                 }
             })
             .catch((err) => {
