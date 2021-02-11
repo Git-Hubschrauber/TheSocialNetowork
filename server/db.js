@@ -70,3 +70,15 @@ module.exports.getUserInfo = (id) => {
     const params = [id];
     return db.query(q, params);
 };
+
+module.exports.insertBio = (id, bio) => {
+    const q = `UPDATE users SET bio = ($2) WHERE id =($1)`;
+    const params = [id, bio];
+    return db.query(q, params);
+};
+
+module.exports.deleteImage = (id, def) => {
+    const q = `UPDATE users SET profile_pic_url = ($2) WHERE id =($1)`;
+    const params = [id, def];
+    return db.query(q, params);
+};

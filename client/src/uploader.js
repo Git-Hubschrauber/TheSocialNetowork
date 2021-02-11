@@ -15,6 +15,14 @@ export default class Uploader extends React.Component {
         this.file = e.target.files[0];
     }
 
+    async delete() {
+        console.log("delete clicked");
+        const a = "default.png";
+        let response = await axios.post("/deleteProfilePicture", a);
+        console.log("resp in delete: ", response);
+        await this.props.setProfilePictureUrl("default.png");
+    }
+
     async submit() {
         console.log("upload clicked");
         const formData = new FormData();
@@ -48,7 +56,7 @@ export default class Uploader extends React.Component {
                         name="file"
                         accept="image/*"
                     />
-
+                    <button onClick={() => this.delete()}>Delete</button>
                     <button onClick={() => this.submit()}>Submit</button>
                 </div>
             </div>

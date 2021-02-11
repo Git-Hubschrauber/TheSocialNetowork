@@ -297,9 +297,49 @@ app.post("/upload", uploader.single("file"), async (req, res) => {
     }
 });
 
+app.post("/deleteProfilePicture", async (req, res) => {
+    const userId = req.session.userId;
+    const def = ["default.png"];
+    console.log("id in /delete: ", userId);
+    console.log("/delete here");
+
+    await db.deleteImage(userId, def);
+
+    res.json({
+        sucess: true,
+    });
+});
+
 //
 //
 //
+
+app.post("/editBio", async (req, res) => {
+    console.log("/editBio here");
+    const userId = req.session.userId;
+    console.log("id in /editBio: ", userId);
+    console.log("req.body in /editBio: ", req.body);
+    const bioObj = {
+        age: req.body.age,
+        gender: req.body.gender,
+        hobbies: req.body.hobbies,
+        biotext: req.body.biotext,
+    };
+    const bio = JSON.stringify(bioObj);
+    console.log("bio in /editBio: ", bio);
+    await db.insertBio(userId, bio);
+    let results = await db.getUserInfo(userId);
+    console.log("editBio results: ", results.rows[0]);
+    const resBio = JSON.parse(results.rows[0].bio);
+    console.log("editBio resBio: ", resBio);
+    res.json(resBio);
+});
+//
+//
+//
+//
+//
+
 //
 //
 

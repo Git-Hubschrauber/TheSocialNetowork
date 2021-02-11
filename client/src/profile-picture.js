@@ -1,18 +1,25 @@
-export default function (props) {
+export default function ({
+    ProfilePictureUrl,
+    firstName,
+    lastName,
+    toggleUploader,
+    size = "",
+}) {
     console.log(
         "props.profilePictureUrl in profilepicture: ",
-        props.ProfilePictureUrl
+        ProfilePictureUrl
     );
 
     return (
         <div>
             <img
-                onClick={props.toggleUploader}
-                src={props.ProfilePictureUrl || "/default.png"}
-                alt={props.firstName + props.lastName}
+                onClick={toggleUploader}
+                src={ProfilePictureUrl || "/default.png"}
+                alt={firstName + lastName}
+                className={size}
             />
             <div>
-                <label>{props.firstName + " " + props.lastName}</label>
+                <label>{firstName + " " + lastName}</label>
             </div>
         </div>
     );
