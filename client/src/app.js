@@ -4,6 +4,8 @@ import ProfilePicture from "./profile-picture";
 import Uploader from "./uploader";
 import Profile from "./profile";
 import Logo from "./logo";
+import OtherProfile from "./otherProfile";
+import { BrowserRouter, Route } from "react-router-dom";
 // import BioEditor from "./bio-editor";
 
 export default class App extends React.Component {
@@ -24,12 +26,12 @@ export default class App extends React.Component {
         };
         this.toggleUploader = this.toggleUploader.bind(this);
         this.setProfilePictureUrl = this.setProfilePictureUrl.bind(this);
-        this.componentDidUpdate = this.componentDidUpdate.bind(this);
+        // this.componentDidUpdate = this.componentDidUpdate.bind(this);
         this.componentDidUpdate2 = this.componentDidUpdate2.bind(this);
     }
 
     async componentDidMount() {
-        const response = await axios.get("/user");
+        const response = await axios.get("/api/loggedUser");
         console.log("app mounted + response: ", response.data);
         console.log("app mounted: bio: ", response.data[0].bio);
         const { first, last, profile_pic_url } = response.data[0];
@@ -125,44 +127,66 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div className="app">
-                <h1>Hello</h1>
+            <BrowserRouter>
+                <div className="app">
+                    <h1>Hello</h1>
 
-                <Logo />
+                    <Logo />
 
-                <ProfilePicture
-                    ProfilePictureUrl={this.state.ProfilePictureUrl}
-                    toggleUploader={this.toggleUploader}
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    size="small"
-                />
-
-                <Profile
-                    ProfilePictureUrl={this.state.ProfilePictureUrl}
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    toggleUploader={this.toggleUploader}
-                    error={this.state.error}
-                    editingMode={this.state.EditingMode}
-                    noBioInfo={this.state.noBioInfo}
-                    age={this.state.age}
-                    gender={this.state.gender}
-                    hobbies={this.state.hobbies}
-                    biotext={this.state.biotext}
-                    componentDidUpdate2={this.componentDidUpdate2}
-                />
-                {this.state.uploaderVisible && (
-                    <Uploader
+                    <ProfilePicture
+                        key={this.state.ProfilePictureUrl}
                         ProfilePictureUrl={this.state.ProfilePictureUrl}
+                        toggleUploader={this.toggleUploader}
                         firstName={this.state.firstName}
                         lastName={this.state.lastName}
-                        toggleUploader={this.toggleUploader}
-                        setProfilePictureUrl={this.setProfilePictureUrl}
-                        componentDidUpdate={this.componentDidUpdate}
+                        size="small"
                     />
-                )}
-            </div>
+
+                    <Route
+                        exact
+                        path="/"
+                        render={() => (
+                            <Profile
+                                key={this.state.noBioInfo}
+                                ProfilePictureUrl={this.state.ProfilePictureUrl}
+                                firstName={this.state.firstName}
+                                lastName={this.state.lastName}
+                                toggleUploader={this.toggleUploader}
+                                error={this.state.error}
+                                editingMode={this.state.EditingMode}
+                                noBioInfo={this.state.noBioInfo}
+                                age={this.state.age}
+                                gender={this.state.gender}
+                                hobbies={this.state.hobbies}
+                                biotext={this.state.biotext}
+                                componentDidUpdate2={this.componentDidUpdate2}
+                            />
+                        )}
+                    />
+
+                    <Route
+                        path="/user/:id"
+                        render={(props) => (
+                            <OtherProfile
+                                key={props.match.url}
+                                match={props.match}
+                                history={props.history}
+                            />
+                        )}
+                    />
+
+                    {this.state.uploaderVisible && (
+                        <Uploader
+                            ProfilePictureUrl={this.state.ProfilePictureUrl}
+                            firstName={this.state.firstName}
+                            lastName={this.state.lastName}
+                            toggleUploader={this.toggleUploader}
+                            setProfilePictureUrl={this.setProfilePictureUrl}
+                            componentDidUpdate={this.componentDidUpdate}
+                        />
+                    )}
+                </div>
+            </BrowserRouter>
         );
     }
 }

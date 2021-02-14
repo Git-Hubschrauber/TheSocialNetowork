@@ -164,13 +164,13 @@ app.post("/login/userlogin", (req, res) => {
         });
 });
 
-app.get("/user", async (req, res) => {
+app.get("/api/loggedUser", async (req, res) => {
     const userId = req.session.userId;
-    console.log("id in /user: ", req.session.userId);
-    console.log("req.body in /user: ", req.body);
-    console.log("req.params in /user: ", req.params);
+    // console.log("id in /api/user: ", req.session.userId);
+    // console.log("req.body in /api/user: ", req.body);
+    // console.log("req.params in /api/user: ", req.params);
     let results = await db.getUserInfo(userId);
-    console.log("/user results: ", results.rows);
+    // console.log("/user results: ", results.rows);
 
     res.json(results.rows);
 });
@@ -339,7 +339,24 @@ app.post("/editBio", async (req, res) => {
 //
 //
 //
+app.post("/api/user/:id", (req, res) => {
+    const userId = req.session.userId;
 
+    console.log("req.params in /user: ", req.params.id);
+    db.getUserInfo(req.params.id)
+        .then((results) => {
+            console.log("other user id results: ", results.rows);
+            res.json({
+                userInfo: results.rows,
+                error: false,
+                loggedUser: userId,
+            });
+        })
+        .catch((err) => {
+            console.log("err in /api/user/:id", err);
+            res.json({ error: true });
+        });
+});
 //
 //
 

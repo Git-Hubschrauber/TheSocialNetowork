@@ -91,6 +91,7 @@ export default class BioEditor extends React.Component {
                                 onChange={(e) => this.changeHandler(e)}
                                 type="number"
                                 name="age"
+                                defaultValue={this.props.age}
                             ></input>
                         </label>
 
@@ -134,6 +135,7 @@ export default class BioEditor extends React.Component {
                                 onChange={(e) => this.changeHandler(e)}
                                 type="text"
                                 name="hobbies"
+                                defaultValue={this.props.hobbies}
                             ></input>
                         </label>
 
@@ -141,6 +143,7 @@ export default class BioEditor extends React.Component {
                         <textarea
                             onChange={(e) => this.changeHandler(e)}
                             name="biotext"
+                            defaultValue={this.props.biotext}
                         ></textarea>
 
                         <button onClick={() => this.submitBio()}>Save</button>
