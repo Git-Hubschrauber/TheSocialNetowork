@@ -319,24 +319,22 @@ app.post("/editBio", async (req, res) => {
     const userId = req.session.userId;
     console.log("id in /editBio: ", userId);
     console.log("req.body in /editBio: ", req.body);
-    const bioObj = {
-        age: req.body.age,
-        gender: req.body.gender,
-        hobbies: req.body.hobbies,
-        biotext: req.body.biotext,
-    };
-    const bio = JSON.stringify(bioObj);
-    console.log("bio in /editBio: ", bio);
-    await db.insertBio(userId, bio);
+
+    console.log("bio in /editBio: ", req.body.bio);
+    await db.insertBio(userId, req.body.bio);
     let results = await db.getUserInfo(userId);
     console.log("editBio results: ", results.rows[0]);
-    const resBio = JSON.parse(results.rows[0].bio);
+    const resBio = results.rows[0].bio;
     console.log("editBio resBio: ", resBio);
     res.json(resBio);
 });
 //
 //
-//
+app.post("/api/logout", (req, res) => {
+    req.session.userId = null;
+    req.session = null;
+    res.redirect("/welcome");
+});
 //
 //
 app.post("/api/user/:id", (req, res) => {
@@ -357,6 +355,36 @@ app.post("/api/user/:id", (req, res) => {
             res.json({ error: true });
         });
 });
+//
+//
+
+app.post("/api/users", async (req, res) => {
+    console.log("/api/users here");
+    const results = await db.getNewUsers();
+
+    console.log("server: recentlyJoined: ", results.rows);
+    res.json(results.rows);
+});
+
+//
+//
+//
+//
+
+app.post("/api/searchUsers/:searchedUser", async (req, res) => {
+    console.log("req.body: ", req.body);
+    console.log(" req.params.searchedUser: ", req.params.searchedUser);
+
+    let val = req.params.searchedUser;
+    let results = await db.searchUsers(val);
+    console.log("/searchuser results: ", results.rows);
+
+    res.json(results.rows);
+});
+//
+//
+//
+//
 //
 //
 

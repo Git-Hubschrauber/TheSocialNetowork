@@ -15,12 +15,10 @@ export default function Profile(props) {
                 New profile picture
             </button>
             <BioEditor
+                key={props.noBioInfo}
                 firstName={props.firstName}
                 lastName={props.lastName}
-                age={props.age}
-                gender={props.gender}
-                hobbies={props.hobbies}
-                biotext={props.biotext}
+                bio={props.bio}
                 toggleEditingMode={props.toggleEditingMode}
                 noBioInfo={props.noBioInfo}
                 componentDidUpdate2={props.componentDidUpdate2}

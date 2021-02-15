@@ -12,10 +12,7 @@ export default class OtherProfile extends React.Component {
             error: false,
             editingMode: false,
             noBioInfo: false,
-            age: "",
-            gender: "",
-            hobbies: "",
-            biotext: "",
+            bio: "",
         };
     }
 
@@ -49,6 +46,7 @@ export default class OtherProfile extends React.Component {
                     ProfilePictureUrl:
                         resp.data.userInfo[0].profile_pic_url ||
                         "./default.png",
+                    bio: resp.data.userInfo[0].bio,
                 });
             })
             .catch((err) => {
@@ -67,6 +65,15 @@ export default class OtherProfile extends React.Component {
                 />
                 <div>first name: {this.state.firstName}</div>
                 <div>last name: {this.state.lastName}</div>
+                <div>bio: {this.state.bio}</div>
+                <button
+                    onClick={() => {
+                        console.log("back clicked");
+                        location.pathname = "/users";
+                    }}
+                >
+                    BACK
+                </button>
             </div>
         );
     }

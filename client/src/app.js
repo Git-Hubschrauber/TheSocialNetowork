@@ -3,8 +3,10 @@ import React from "react";
 import ProfilePicture from "./profile-picture";
 import Uploader from "./uploader";
 import Profile from "./profile";
+import Logout from "./logout";
 import Logo from "./logo";
 import OtherProfile from "./otherProfile";
+import FindPeople from "./findPeople";
 import { BrowserRouter, Route } from "react-router-dom";
 // import BioEditor from "./bio-editor";
 
@@ -19,10 +21,7 @@ export default class App extends React.Component {
             error: false,
             editingMode: false,
             noBioInfo: false,
-            age: "",
-            gender: "",
-            hobbies: "",
-            biotext: "",
+            bio: "",
         };
         this.toggleUploader = this.toggleUploader.bind(this);
         this.setProfilePictureUrl = this.setProfilePictureUrl.bind(this);
@@ -34,7 +33,7 @@ export default class App extends React.Component {
         const response = await axios.get("/api/loggedUser");
         console.log("app mounted + response: ", response.data);
         console.log("app mounted: bio: ", response.data[0].bio);
-        const { first, last, profile_pic_url } = response.data[0];
+        const { first, last, profile_pic_url, bio } = response.data[0];
 
         if (response.data[0].bio === null || response.data[0].bio.length == 2) {
             console.log("no bio info");
@@ -42,17 +41,12 @@ export default class App extends React.Component {
                 noBioInfo: true,
             });
         }
-        const { age, gender, hobbies, biotext } = JSON.parse(
-            response.data[0].bio
-        );
+
         this.setState({
             firstName: first,
             lastName: last,
             ProfilePictureUrl: profile_pic_url,
-            age: age,
-            gender: gender,
-            hobbies: hobbies,
-            biotext: biotext,
+            bio: bio,
             noBioInfo: false,
         });
     }
@@ -78,32 +72,18 @@ export default class App extends React.Component {
     }
 
     componentDidUpdate2(newProps) {
-        if (
-            !newProps.age &&
-            !newProps.gender &&
-            !newProps.hobbies &&
-            !newProps.biotext
-        ) {
+        if (!newProps.bio) {
             this.setState({
-                age: "",
-                gender: "",
-                hobbies: "",
-                biotext: "",
+                bio: "",
                 noBioInfo: true,
             });
         }
-        if (
-            this.state.age !== newProps.age ||
-            this.state.gender !== newProps.gender ||
-            this.state.hobbies !== newProps.hobbies ||
-            this.state.biotext !== newProps.biotext
-        ) {
+        if (this.state.bio !== newProps) {
             console.log("profile data changed: ", newProps);
+            console.log("profile data new: ", newProps);
+            console.log("profile data old: ", this.state.bio);
             this.setState({
-                age: newProps.age,
-                gender: newProps.gender,
-                hobbies: newProps.hobbies,
-                biotext: newProps.biotext,
+                bio: newProps,
                 noBioInfo: false,
             });
         }
@@ -129,38 +109,47 @@ export default class App extends React.Component {
         return (
             <BrowserRouter>
                 <div className="app">
-                    <h1>Hello</h1>
+                    <header>
+                        <h1>The Dark Social Network</h1>
+                        <Logout />
+                        <Logo />
+                    </header>
 
-                    <Logo />
-
-                    <ProfilePicture
-                        key={this.state.ProfilePictureUrl}
-                        ProfilePictureUrl={this.state.ProfilePictureUrl}
-                        toggleUploader={this.toggleUploader}
-                        firstName={this.state.firstName}
-                        lastName={this.state.lastName}
-                        size="small"
-                    />
-
+                    <div className="profilePictureElem">
+                        <ProfilePicture
+                            key={this.state.ProfilePictureUrl}
+                            ProfilePictureUrl={this.state.ProfilePictureUrl}
+                            toggleUploader={this.toggleUploader}
+                            firstName={this.state.firstName}
+                            lastName={this.state.lastName}
+                            size="small"
+                        />
+                    </div>
                     <Route
                         exact
                         path="/"
                         render={() => (
-                            <Profile
-                                key={this.state.noBioInfo}
-                                ProfilePictureUrl={this.state.ProfilePictureUrl}
-                                firstName={this.state.firstName}
-                                lastName={this.state.lastName}
-                                toggleUploader={this.toggleUploader}
-                                error={this.state.error}
-                                editingMode={this.state.EditingMode}
-                                noBioInfo={this.state.noBioInfo}
-                                age={this.state.age}
-                                gender={this.state.gender}
-                                hobbies={this.state.hobbies}
-                                biotext={this.state.biotext}
-                                componentDidUpdate2={this.componentDidUpdate2}
-                            />
+                            <div>
+                                <h1>
+                                    <a href="/users">Find new people</a>
+                                </h1>
+                                <Profile
+                                    key={this.state.noBioInfo}
+                                    ProfilePictureUrl={
+                                        this.state.ProfilePictureUrl
+                                    }
+                                    firstName={this.state.firstName}
+                                    lastName={this.state.lastName}
+                                    toggleUploader={this.toggleUploader}
+                                    error={this.state.error}
+                                    editingMode={this.state.EditingMode}
+                                    noBioInfo={this.state.noBioInfo}
+                                    bio={this.state.bio}
+                                    componentDidUpdate2={
+                                        this.componentDidUpdate2
+                                    }
+                                />
+                            </div>
                         )}
                     />
 
@@ -174,6 +163,7 @@ export default class App extends React.Component {
                             />
                         )}
                     />
+                    <Route path="/users" render={() => <FindPeople />} />
 
                     {this.state.uploaderVisible && (
                         <Uploader

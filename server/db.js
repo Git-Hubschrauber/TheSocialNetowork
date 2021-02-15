@@ -82,3 +82,15 @@ module.exports.deleteImage = (id, def) => {
     const params = [id, def];
     return db.query(q, params);
 };
+
+module.exports.getNewUsers = () => {
+    const q = `SELECT * FROM users
+    ORDER BY created_at DESC LIMIT 3`;
+    return db.query(q);
+};
+
+module.exports.searchUsers = (val) => {
+    const q = `SELECT * FROM users WHERE first ILIKE ($1) ORDER BY first ASC LIMIT 5`;
+    const params = [val + "%"];
+    return db.query(q, params);
+};
