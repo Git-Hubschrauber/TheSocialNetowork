@@ -1,5 +1,6 @@
 import ProfilePicture from "./profile-picture";
 import BioEditor from "./bio-editor";
+import Friends from "./friends";
 
 export default function Profile(props) {
     return (
@@ -23,6 +24,7 @@ export default function Profile(props) {
                 noBioInfo={props.noBioInfo}
                 componentDidUpdate2={props.componentDidUpdate2}
             />
+            <Friends />
         </div>
     );
 }

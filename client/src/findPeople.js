@@ -55,6 +55,13 @@ export default function () {
                     </div>
                 );
             })}
+            <button
+                onClick={() => {
+                    location = "/";
+                }}
+            >
+                Back
+            </button>
         </div>
     );
 }

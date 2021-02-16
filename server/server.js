@@ -170,17 +170,9 @@ app.get("/api/loggedUser", async (req, res) => {
     // console.log("req.body in /api/user: ", req.body);
     // console.log("req.params in /api/user: ", req.params);
     let results = await db.getUserInfo(userId);
-    // console.log("/user results: ", results.rows);
+    console.log("/user results: ", results.rows[0]);
 
-    res.json(results.rows);
-});
-
-app.get("*", function (req, res) {
-    if (!req.session.userId) {
-        res.redirect("/welcome");
-    } else {
-        res.sendFile(path.join(__dirname, "..", "client", "index.html"));
-    }
+    res.json(results.rows[0]);
 });
 
 //
@@ -337,23 +329,33 @@ app.post("/api/logout", (req, res) => {
 });
 //
 //
-app.post("/api/user/:id", (req, res) => {
+app.get("/api/user/:id", async (req, res) => {
     const userId = req.session.userId;
+    const recipient_id = req.params.id;
+    try {
+        const results1 = await db.getUserInfo(req.params.id);
+        const results2 = await db.getFriendshipStatus(userId, recipient_id);
+        console.log("other user id results: ", results1.rows[0]);
+        console.log("friendship results: ", results2.rows[0]);
+        // if (!results2.rows[0]) {
+        //     results2.rows[0] = false;
+        //     console.log(
+        //         "friendship results2.rows[0]: ",
+        //         results2.rows[0],
+        //         results1.rows[0]
+        //     );
+        // }
 
-    console.log("req.params in /user: ", req.params.id);
-    db.getUserInfo(req.params.id)
-        .then((results) => {
-            console.log("other user id results: ", results.rows);
-            res.json({
-                userInfo: results.rows,
-                error: false,
-                loggedUser: userId,
-            });
-        })
-        .catch((err) => {
-            console.log("err in /api/user/:id", err);
-            res.json({ error: true });
+        return res.json({
+            userInfo: results1.rows[0],
+            error: false,
+            loggedUser: userId,
+            friendship: results2.rows[0],
         });
+    } catch (err) {
+        console.log("err in /api/user/:id", err);
+        res.json({ error: true });
+    }
 });
 //
 //
@@ -362,7 +364,7 @@ app.post("/api/users", async (req, res) => {
     console.log("/api/users here");
     const results = await db.getNewUsers();
 
-    console.log("server: recentlyJoined: ", results.rows);
+    // console.log("server: recentlyJoined: ", results.rows);
     res.json(results.rows);
 });
 
@@ -384,6 +386,101 @@ app.post("/api/searchUsers/:searchedUser", async (req, res) => {
 //
 //
 //
+
+app.post("/api/userInvitation/:id", async (req, res) => {
+    const sender_id = req.session.userId;
+    const recipient_id = req.params.id;
+    try {
+        const results = await db.makeFriendship(sender_id, recipient_id);
+
+        console.log("friendship invitation results: ", results);
+        res.json(results.rows);
+    } catch (err) {
+        console.log("err in /userInvitation", err);
+        res.json({ error: true });
+    }
+});
+
+app.post("/api/acceptInvitation/:id", async (req, res) => {
+    const sender_id = req.session.userId;
+    const recipient_id = req.params.id;
+    try {
+        await db.acceptFriendship(recipient_id, sender_id);
+        const results = await db.getFriendshipStatus(sender_id, recipient_id);
+
+        console.log("accept invitation results: ", results.rows);
+        res.json(results.rows);
+    } catch (err) {
+        console.log("err in /acceptInvitation", err);
+        res.json({ error: true });
+    }
+});
+
+app.post("/api/cancelInvitation/:id", async (req, res) => {
+    const sender_id = req.session.userId;
+    const recipient_id = req.params.id;
+    try {
+        await db.cancelFriendship(sender_id, recipient_id);
+        res.json({ error: false });
+    } catch (err) {
+        console.log("err in /cancelInvitation", err);
+        res.json({ error: true });
+    }
+});
+
+app.get("/api/friends/", async (req, res) => {
+    const loggedId = req.session.userId;
+
+    try {
+        const { rows } = await db.getFriends(loggedId);
+        console.log("results in /friends", rows);
+        const friendIds = [];
+        rows.forEach((element) => {
+            if (element.sender_id == loggedId) {
+                friendIds.push(element.recipient_id);
+            }
+            if (element.recipient_id == loggedId) {
+                friendIds.push(element.sender_id);
+            }
+        });
+        console.log("friendIds: ", friendIds);
+
+        res.json(friendIds);
+
+        // console.log("friends: ", friends);
+        // res.json({ results: friends });
+    } catch (err) {
+        console.log("err in /friends", err);
+        res.json({ error: true });
+    }
+});
+
+app.get("/api/friend/:id", async (req, res) => {
+    try {
+        const { rows } = await db.getUserInfo(req.params.id);
+        console.log("results in /friends/id", rows);
+
+        res.json(rows);
+
+        // console.log("friends: ", friends);
+        // res.json({ results: friends });
+    } catch (err) {
+        console.log("err in /friend/id", err);
+        res.json({ error: true });
+    }
+});
+//
+//
+//
+
+app.get("*", function (req, res) {
+    if (!req.session.userId) {
+        res.redirect("/welcome");
+    } else {
+        res.sendFile(path.join(__dirname, "..", "client", "index.html"));
+    }
+});
+
 //
 //
 //

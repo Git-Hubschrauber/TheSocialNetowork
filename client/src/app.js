@@ -7,6 +7,7 @@ import Logout from "./logout";
 import Logo from "./logo";
 import OtherProfile from "./otherProfile";
 import FindPeople from "./findPeople";
+
 import { BrowserRouter, Route } from "react-router-dom";
 // import BioEditor from "./bio-editor";
 
@@ -16,7 +17,7 @@ export default class App extends React.Component {
         this.state = {
             firstName: "",
             lastName: "",
-            ProfilePictureUrl: "",
+            ProfilePictureUrl: "default.png",
             uploaderVisible: false,
             error: false,
             editingMode: false,
@@ -32,13 +33,13 @@ export default class App extends React.Component {
     async componentDidMount() {
         const response = await axios.get("/api/loggedUser");
         console.log("app mounted + response: ", response.data);
-        console.log("app mounted: bio: ", response.data[0].bio);
-        const { first, last, profile_pic_url, bio } = response.data[0];
+        console.log("app mounted: bio: ", response.data.bio);
+        const { first, last, profile_pic_url, bio } = response.data;
 
-        if (response.data[0].bio === null || response.data[0].bio.length == 2) {
+        if (response.data.bio === null || response.data.bio.length == 2) {
             console.log("no bio info");
             return this.setState({
-                noBioInfo: true,
+                noBioInfo: false,
             });
         }
 
@@ -52,12 +53,12 @@ export default class App extends React.Component {
     }
 
     async componentDidUpdate(prev) {
-        if (!this.state.ProfilePictureUrl) {
-            this.setState({
-                ProfilePictureUrl: "default.png",
-            });
-            return;
-        }
+        // if (!this.state.ProfilePictureUrl) {
+        //     this.setState({
+        //         ProfilePictureUrl: "default.png",
+        //     });
+        //     return;
+        // }
         if (!prev[0]) {
             console.log("prev empty");
 
@@ -117,7 +118,7 @@ export default class App extends React.Component {
 
                     <div className="profilePictureElem">
                         <ProfilePicture
-                            key={this.state.ProfilePictureUrl}
+                            // key={this.state.ProfilePictureUrl}
                             ProfilePictureUrl={this.state.ProfilePictureUrl}
                             toggleUploader={this.toggleUploader}
                             firstName={this.state.firstName}
