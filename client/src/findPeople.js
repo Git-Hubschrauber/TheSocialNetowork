@@ -41,26 +41,30 @@ export default function () {
                 onChange={(e) => setSearchedUser(e.target.value)}
                 autoComplete="off"
             />
-
-            {searchUsers.map((elem, index) => {
-                return (
-                    <div key={index}>
-                        <Link to={"/user/" + elem.id}>
-                            <img src={elem.profile_pic_url || "default.png"} />
-                            <p>
-                                {elem.first} {elem.last}
-                            </p>
-                            <p>{elem.bio}</p>
-                        </Link>
-                    </div>
-                );
-            })}
+            <div className="findpeople">
+                {searchUsers.map((elem, index) => {
+                    return (
+                        <div key={index}>
+                            <Link to={"/user/" + elem.id}>
+                                <img
+                                    src={elem.profile_pic_url || "/default.png"}
+                                />
+                                <p>
+                                    {elem.first} {elem.last}
+                                </p>
+                                {/* <p>{elem.bio}</p> */}
+                            </Link>
+                        </div>
+                    );
+                })}
+            </div>
             <button
+                className="backBtn"
                 onClick={() => {
                     location = "/";
                 }}
             >
-                Back
+                BACK
             </button>
         </div>
     );

@@ -107,6 +107,7 @@ export default class OtherProfile extends React.Component {
                     friendshipState={this.state.friendship}
                 />
                 <button
+                    className="backBtn"
                     onClick={() => {
                         console.log("back clicked");
                         location.pathname = "/users";

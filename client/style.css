@@ -33,6 +33,7 @@ input {
 
 button {
     padding: 5px;
+    background-color: lightgray;
 }
 .error {
     color: red;
@@ -82,7 +83,7 @@ img {
 header {
     background-color: black;
     color: white;
-    height: 100px;
+    height: 15vh;
     width: 100vw;
     padding: 5px;
     align-content: center;
@@ -101,7 +102,7 @@ header button {
     position: absolute;
 
     top: 45px;
-    right: 50px;
+    right: 3vw;
 }
 
 header h1 {
@@ -110,9 +111,10 @@ header h1 {
 
 .profilePictureElem {
     float: left;
-    height: 100vh;
+    height: 80vh;
     width: 15vw;
-    background-color: burlywood;
+    background-color: gray;
+    border-right: 2px black solid;
 }
 
 .profilePictureElem img {
@@ -120,10 +122,44 @@ header h1 {
     height: 10vw;
     width: 10vw;
     top: 30px;
+    border-right: 5px black solid;
+    border-left: 5px black solid;
 }
 .profilePictureElem label {
     position: relative;
 
     top: 40px;
     font-weight: bold;
+}
+
+footer {
+    height: 5vh;
+    width: 100vw;
+    background-color: black;
+    color: white;
+    position: absolute;
+    top: 95vh;
+}
+
+.recentlyJoined {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-evenly;
+    border-bottom: 1px solid black;
+}
+
+.findpeople {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-evenly;
+}
+
+.backBtn {
+    position: absolute;
+    width: 70px;
+    bottom: 3vh;
+    right: 3vw;
+    z-index: 4;
 }

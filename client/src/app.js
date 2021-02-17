@@ -17,7 +17,7 @@ export default class App extends React.Component {
         this.state = {
             firstName: "",
             lastName: "",
-            ProfilePictureUrl: "default.png",
+            ProfilePictureUrl: "/default.png",
             uploaderVisible: false,
             error: false,
             editingMode: false,
@@ -176,6 +176,9 @@ export default class App extends React.Component {
                             componentDidUpdate={this.componentDidUpdate}
                         />
                     )}
+                    <footer>
+                        <p>created 2021</p>
+                    </footer>
                 </div>
             </BrowserRouter>
         );

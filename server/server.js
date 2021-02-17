@@ -291,7 +291,7 @@ app.post("/upload", uploader.single("file"), async (req, res) => {
 
 app.post("/deleteProfilePicture", async (req, res) => {
     const userId = req.session.userId;
-    const def = ["default.png"];
+    const def = ["/default.png"];
     console.log("id in /delete: ", userId);
     console.log("/delete here");
 
@@ -444,8 +444,10 @@ app.get("/api/friends/", async (req, res) => {
             }
         });
         console.log("friendIds: ", friendIds);
+        const results2 = await db.getFriends2(friendIds);
+        console.log("results2 in /friends", results2.rows);
 
-        res.json(friendIds);
+        res.json(results2.rows);
 
         // console.log("friends: ", friends);
         // res.json({ results: friends });

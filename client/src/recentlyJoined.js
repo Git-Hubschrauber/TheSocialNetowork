@@ -21,18 +21,17 @@ export default function ({ x }) {
     // console.log("newUsers: ", newUsers);
 
     return (
-        <div>
+        <div className="recentlyJoined">
             {newUsers.map((elem, index) => {
                 return (
                     <div key={index}>
                         <Link to={"/user/" + elem.id}>
-                            <img src={elem.profile_pic_url || "default.png"} />
+                            <img src={elem.profile_pic_url || "/default.png"} />
                             <p>
                                 {elem.first} {elem.last}
                             </p>
-                            <p>{elem.bio}</p>
+                            {/* <p>{elem.bio}</p> */}
                         </Link>
-                        <hr></hr>
                     </div>
                 );
             })}
