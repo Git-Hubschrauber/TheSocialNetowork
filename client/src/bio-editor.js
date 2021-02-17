@@ -55,8 +55,8 @@ export default class BioEditor extends React.Component {
     render() {
         if (this.state.editingMode) {
             return (
-                <div>
-                    <h1>Please edit your bio</h1>
+                <div className="ownProfileBio">
+                    <h1 className="pleaseEdit">Please edit your bio</h1>
 
                     <div>
                         <label>About yourself:</label>
@@ -66,9 +66,17 @@ export default class BioEditor extends React.Component {
                             defaultValue={this.props.bio}
                         ></textarea>
 
-                        <button onClick={() => this.submitBio()}>Save</button>
+                        <button
+                            className="submitBioBtn"
+                            onClick={() => this.submitBio()}
+                        >
+                            Save
+                        </button>
                     </div>
-                    <button onClick={() => this.toggleEditingMode()}>
+                    <button
+                        className="cancelSubmitBioBtn"
+                        onClick={() => this.toggleEditingMode()}
+                    >
                         Cancel
                     </button>
                 </div>
@@ -82,12 +90,13 @@ export default class BioEditor extends React.Component {
             );
         }
         return (
-            <div>
-                <h1>Your Bio</h1>
-
-                <div>About yourself: {this.props.bio}</div>
-
-                <button onClick={() => this.toggleEditingMode()}>
+            <div className="ownProfileBio">
+                <h2>About yourself:</h2>
+                <p>{this.props.bio}</p>
+                <button
+                    className="changeBioBtn"
+                    onClick={() => this.toggleEditingMode()}
+                >
                     Change your bio!
                 </button>
             </div>

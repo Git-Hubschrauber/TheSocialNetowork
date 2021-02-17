@@ -5,6 +5,9 @@ body {
     height: 100vh;
     text-align: center;
     margin: 0;
+    background-image: url("/background.jpg");
+    background-size: cover;
+    color: white;
 }
 
 .welcome {
@@ -87,6 +90,7 @@ header {
     width: 100vw;
     padding: 5px;
     align-content: center;
+    border-bottom: 4px solid rgba(250, 250, 250, 0.2);
 }
 
 header img {
@@ -109,12 +113,16 @@ header h1 {
     font-size: 48px;
 }
 
+.profile {
+    border-bottom: 2px black solid;
+}
+
 .profilePictureElem {
     float: left;
     height: 80vh;
     width: 15vw;
-    background-color: gray;
-    border-right: 2px black solid;
+    background: rgba(250, 250, 250, 0.2);
+    border-right: 4px solid rgba(250, 250, 250, 0.2);
 }
 
 .profilePictureElem img {
@@ -132,6 +140,140 @@ header h1 {
     font-weight: bold;
 }
 
+.profilePictureElem h1 {
+    position: relative;
+    padding: 5px;
+    width: 10vw;
+    left: 1.5vw;
+    top: 2%;
+    font-weight: bold;
+}
+
+.profilePictureElem h2 {
+    position: relative;
+    padding: 10px;
+    background-color: lightgray;
+    width: 10vw;
+    left: 1.5vw;
+    top: 15%;
+    font-weight: bold;
+    border: 2px solid gray;
+}
+
+.ownProfilePic {
+    position: absolute;
+    height: 50vh;
+    width: 40%;
+    left: 55vw;
+    bottom: 25%;
+    background: rgba(250, 250, 250, 0.2);
+    border: 6px solid rgba(250, 250, 250, 0.2);
+}
+
+.ownProfilePic img {
+    height: 50vh;
+    max-width: 40vw;
+
+    bottom: 25%;
+}
+
+.ownProfileBio {
+    position: absolute;
+    left: 20%;
+    bottom: 25%;
+    width: 25%;
+    text-align: left;
+    background: rgba(250, 250, 250, 0.2);
+    padding: 2.5%;
+    border: 4px solid rgba(250, 250, 250, 0.2);
+}
+.pleaseEdit {
+    position: absolute;
+    top: -25vh;
+    color: blue;
+}
+.ownProfileBio textarea {
+    position: absolute;
+    left: -7.5%;
+    bottom: 1%;
+    width: 33vw;
+    height: 25vh;
+
+    padding: 2%;
+    border: 2px solid gray;
+}
+
+.submitBioBtn {
+    position: absolute;
+    width: 100px;
+    bottom: -6vh;
+    left: 25%;
+}
+.cancelSubmitBioBtn {
+    position: absolute;
+    width: 100px;
+    bottom: -6vh;
+    left: 60%;
+}
+
+.changeBioBtn {
+    position: absolute;
+    bottom: -6vh;
+    left: 35%;
+}
+
+.newProfilePicBtn {
+    position: absolute;
+    bottom: -6vh;
+    left: 35%;
+}
+
+.otherProfile {
+    height: 75vh;
+}
+
+.otherProfilePic {
+    position: absolute;
+    height: 50vh;
+    width: 40%;
+    left: 55vw;
+    bottom: 25%;
+    background: rgba(250, 250, 250, 0.2);
+    border: 6px solid rgba(250, 250, 250, 0.2);
+}
+
+.otherProfile img {
+    /* position: absolute; */
+    height: 50vh;
+    max-width: 40vw;
+    /* left: 55vw; */
+    bottom: 25%;
+    /* border: 6px solid rgba(250, 250, 250, 0.2); */
+}
+
+.otherProfileHeader {
+    position: absolute;
+    left: 20%;
+    top: 30%;
+}
+
+.otherProfileBio {
+    position: absolute;
+    left: 20%;
+    bottom: 25%;
+    width: 25%;
+    text-align: left;
+    background: rgba(250, 250, 250, 0.2);
+    padding: 2.5%;
+    border: 4px solid rgba(250, 250, 250, 0.2);
+}
+
+.otherProfile .friendButton {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+}
+
 footer {
     height: 5vh;
     width: 100vw;
@@ -139,6 +281,7 @@ footer {
     color: white;
     position: absolute;
     top: 95vh;
+    border-top: 4px solid rgba(250, 250, 250, 0.2);
 }
 
 .recentlyJoined {
@@ -146,7 +289,7 @@ footer {
     flex-wrap: wrap;
     align-content: center;
     justify-content: space-evenly;
-    border-bottom: 1px solid black;
+    border-bottom: 4px solid rgba(250, 250, 250, 0.2);
 }
 
 .findpeople {

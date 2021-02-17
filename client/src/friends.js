@@ -23,7 +23,15 @@ export default function () {
                     </div>
                 );
             })}
-            <h1>Friends end</h1>
+            <button
+                className="backBtn"
+                onClick={() => {
+                    console.log("back clicked");
+                    location.pathname = "/";
+                }}
+            >
+                BACK
+            </button>
         </div>
     );
 }

@@ -81,31 +81,29 @@ export default class OtherProfile extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Other Profile</h1>
-                <h1>Bio</h1>
-                <img
-                    src={this.state.ProfilePictureUrl}
-                    alt={this.state.firstName + this.state.lastName}
-                />
-                <div>first name: {this.state.firstName}</div>
-                <div>last name: {this.state.lastName}</div>
-                <div>bio: {this.state.bio}</div>
-
-                {/* {this.state.friendship && (
-                    <button onClick={() => this.cancelFriendship()}>
-                        Cancel friendship
-                    </button>
-                )}
-                {!this.state.friendship && (
-                    <button onClick={() => makeFriendship()}>
-                        Make a friendship request
-                    </button>
-                )} */}
-                <FriendButton
-                    id={this.props.match.params.id}
-                    friendshipState={this.state.friendship}
-                />
+            <div className="otherProfile">
+                {/* <h1>Profile</h1> */}
+                <h1 className="otherProfileHeader">
+                    {this.state.firstName + " " + this.state.lastName}
+                </h1>
+                <div className="otherProfilePic">
+                    <img
+                        src={this.state.ProfilePictureUrl}
+                        alt={this.state.firstName + this.state.lastName}
+                    />
+                </div>
+                {/* <div>first name: {this.state.firstName}</div>
+                <div>last name: {this.state.lastName}</div> */}
+                <div className="otherProfileBio">
+                    <h2>About {this.state.firstName}:</h2>
+                    <p>{this.state.bio}</p>
+                </div>
+                <div className="friendButton">
+                    <FriendButton
+                        id={this.props.match.params.id}
+                        friendshipState={this.state.friendship}
+                    />
+                </div>
                 <button
                     className="backBtn"
                     onClick={() => {

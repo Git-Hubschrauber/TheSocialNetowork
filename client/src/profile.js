@@ -1,20 +1,25 @@
 import ProfilePicture from "./profile-picture";
 import BioEditor from "./bio-editor";
-import Friends from "./friends";
 
 export default function Profile(props) {
     return (
-        <div>
-            <h1>I am the profile component {props.firstName}</h1>
-            <ProfilePicture
-                ProfilePictureUrl={props.ProfilePictureUrl}
-                firstName={props.firstName}
-                lastName={props.lastName}
-                toggleUploader={props.toggleUploader}
-            />
-            <button onClick={() => props.toggleUploader()}>
-                New profile picture
-            </button>
+        <div className="profile">
+            <h1 className="otherProfileHeader">Your profile</h1>
+            <div className="ownProfilePic">
+                <ProfilePicture
+                    ProfilePictureUrl={props.ProfilePictureUrl}
+                    firstName={props.firstName}
+                    lastName={props.lastName}
+                    toggleUploader={props.toggleUploader}
+                />
+                <button
+                    className="newProfilePicBtn"
+                    onClick={() => props.toggleUploader()}
+                >
+                    New profile picture
+                </button>
+            </div>
+
             <BioEditor
                 key={props.noBioInfo}
                 firstName={props.firstName}
@@ -24,7 +29,7 @@ export default function Profile(props) {
                 noBioInfo={props.noBioInfo}
                 componentDidUpdate2={props.componentDidUpdate2}
             />
-            <Friends />
+            {/* <Friends /> */}
         </div>
     );
 }

@@ -7,6 +7,8 @@ import Logout from "./logout";
 import Logo from "./logo";
 import OtherProfile from "./otherProfile";
 import FindPeople from "./findPeople";
+import { Link } from "react-router-dom";
+import Friends from "./friends";
 
 import { BrowserRouter, Route } from "react-router-dom";
 // import BioEditor from "./bio-editor";
@@ -125,15 +127,27 @@ export default class App extends React.Component {
                             lastName={this.state.lastName}
                             size="small"
                         />
+                        <h1>
+                            {this.state.firstName + " " + this.state.lastName}
+                        </h1>
+                        <h2>
+                            <Link to="/friends">
+                                Friends and friend requests
+                            </Link>
+                        </h2>
+
+                        <h2>
+                            <Link to="/users">Find new people</Link>
+                        </h2>
+                        <h2>
+                            <Link to="/">My profile</Link>
+                        </h2>
                     </div>
                     <Route
                         exact
                         path="/"
                         render={() => (
                             <div>
-                                <h1>
-                                    <a href="/users">Find new people</a>
-                                </h1>
                                 <Profile
                                     key={this.state.noBioInfo}
                                     ProfilePictureUrl={
@@ -153,7 +167,7 @@ export default class App extends React.Component {
                             </div>
                         )}
                     />
-
+                    <Route path="/friends" render={() => <Friends />} />
                     <Route
                         path="/user/:id"
                         render={(props) => (
@@ -161,10 +175,18 @@ export default class App extends React.Component {
                                 key={props.match.url}
                                 match={props.match}
                                 history={props.history}
+                                ProfilePictureUrl={this.state.ProfilePictureUrl}
                             />
                         )}
                     />
-                    <Route path="/users" render={() => <FindPeople />} />
+                    <Route
+                        path="/users"
+                        render={() => (
+                            <FindPeople
+                                ProfilePictureUrl={this.state.ProfilePictureUrl}
+                            />
+                        )}
+                    />
 
                     {this.state.uploaderVisible && (
                         <Uploader
