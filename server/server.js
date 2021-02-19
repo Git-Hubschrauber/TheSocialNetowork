@@ -432,22 +432,22 @@ app.get("/api/friends/", async (req, res) => {
     const loggedId = req.session.userId;
 
     try {
-        const { rows } = await db.getFriends(loggedId);
-        console.log("results in /friends", rows);
-        const friendIds = [];
-        rows.forEach((element) => {
-            if (element.sender_id == loggedId) {
-                friendIds.push(element.recipient_id);
-            }
-            if (element.recipient_id == loggedId) {
-                friendIds.push(element.sender_id);
-            }
-        });
-        console.log("friendIds: ", friendIds);
-        const results2 = await db.getFriends2(friendIds);
-        console.log("results2 in /friends", results2.rows);
+        const { rows } = await db.getFriendsandRequests(loggedId);
+        // console.log("results in /friends", rows);
+        // const friendIds = [];
+        // rows.forEach((element) => {
+        //     if (element.sender_id == loggedId) {
+        //         friendIds.push(element.recipient_id);
+        //     }
+        //     if (element.recipient_id == loggedId) {
+        //         friendIds.push(element.sender_id);
+        //     }
+        // });
+        // console.log("friendIds: ", friendIds);
+        // const results2 = await db.getFriends2(friendIds);
+        // console.log("results2 in /friends", results2.rows);
 
-        res.json(results2.rows);
+        res.json({ friendships: rows, loggedUser: loggedId });
 
         // console.log("friends: ", friends);
         // res.json({ results: friends });

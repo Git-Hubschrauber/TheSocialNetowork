@@ -51,13 +51,24 @@ export default class Uploader extends React.Component {
                         toggleUploader={this.props.toggleUploader}
                     />
                     <input
+                        className="chooseFileBtn"
                         onChange={(e) => this.fileSelectHandler(e)}
                         type="file"
                         name="file"
                         accept="image/*"
                     />
-                    <button onClick={() => this.delete()}>Delete</button>
-                    <button onClick={() => this.submit()}>Submit</button>
+                    <button
+                        className="deleteImageBtn"
+                        onClick={() => this.delete()}
+                    >
+                        Delete
+                    </button>
+                    <button
+                        className="submitImageBtn"
+                        onClick={() => this.submit()}
+                    >
+                        Submit
+                    </button>
                 </div>
             </div>
         );

@@ -130,3 +130,13 @@ module.exports.getFriends2 = (elem) => {
     const params = [elem];
     return db.query(q, params);
 };
+
+module.exports.getFriendsandRequests = (id) => {
+    const q = `SELECT users.id, first, last, profile_pic_url, accepted, sender_id, recipient_id 
+    FROM friendships
+    JOIN users
+    ON (recipient_id = $1 AND sender_id = users.id)
+    OR (sender_id = $1 AND recipient_id = users.id)`;
+    const params = [id];
+    return db.query(q, params);
+};

@@ -113,7 +113,12 @@ export default class App extends React.Component {
             <BrowserRouter>
                 <div className="app">
                     <header>
-                        <h1>The Dark Social Network</h1>
+                        <h1
+                            className="darknet"
+                            data-text="The Dark Social Network"
+                        >
+                            The Dark Social Network
+                        </h1>
                         <Logout />
                         <Logo />
                     </header>
@@ -140,7 +145,7 @@ export default class App extends React.Component {
                             <Link to="/users">Find new people</Link>
                         </h2>
                         <h2>
-                            <Link to="/">My profile</Link>
+                            <Link to="/">Your profile</Link>
                         </h2>
                     </div>
                     <Route

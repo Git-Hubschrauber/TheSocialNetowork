@@ -9,12 +9,12 @@ export default function ({
         "props.profilePictureUrl in profilepicture: ",
         ProfilePictureUrl
     );
-    // if (
-    //     !ProfilePictureUrl.startsWith("http") ||
-    //     !ProfilePictureUrl.startsWith("/")
-    // ) {
-    //     ProfilePictureUrl = "/" + ProfilePictureUrl;
-    // }
+    if (
+        !ProfilePictureUrl.startsWith("http") &&
+        !ProfilePictureUrl.startsWith("/")
+    ) {
+        ProfilePictureUrl = "/" + ProfilePictureUrl;
+    }
     return (
         // <div>
         <img

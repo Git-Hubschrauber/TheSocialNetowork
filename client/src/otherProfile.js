@@ -42,6 +42,15 @@ export default class OtherProfile extends React.Component {
                     "resp.4 in otherProfile: ",
                     resp.data.userInfo.profile_pic_url
                 );
+
+                if (
+                    !resp.data.userInfo.profile_pic_url.startsWith("http") &&
+                    !resp.data.userInfo.profile_pic_url.startsWith("/")
+                ) {
+                    resp.data.userInfo.profile_pic_url =
+                        "/" + resp.data.userInfo.profile_pic_url;
+                }
+
                 console.log("resp.5 in otherProfile: ", resp.data.friendship);
                 this.setState({
                     firstName: resp.data.userInfo.first,
@@ -56,28 +65,6 @@ export default class OtherProfile extends React.Component {
                 console.log("err in otherProfile", err);
             });
     }
-
-    // async makeFriendship() {
-    //     const id = this.props.match.params.id;
-    //     console.log("friendship request made");
-    //     try {
-    //         const { data } = await axios.post("/api/userInvitation/" + id);
-    //         console.log("response friendship request Client", data);
-    //     } catch (err) {
-    //         console.log("err in friendship request", err);
-    //     }
-    // }
-
-    // async cancelFriendship() {
-    //     const id = this.props.match.params.id;
-    //     console.log("friendship cancel request made");
-    //     try {
-    //         const { data } = await axios.post("/api/cancelInvitation/" + id);
-    //         console.log("friendship canceled", data);
-    //     } catch (err) {
-    //         console.log("err in friendship cancellation", err);
-    //     }
-    // }
 
     render() {
         return (
