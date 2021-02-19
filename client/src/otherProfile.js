@@ -26,22 +26,14 @@ export default class OtherProfile extends React.Component {
             .get("/api/user/" + id)
             .then((resp) => {
                 console.log("resp. in otherProfile: ", resp.data);
+                console.log(
+                    "friendship in otherProfile: ",
+                    resp.data.friendship
+                );
+                console.log("this.state.friendship1: ", this.state.friendship);
                 if (this.props.match.params.id == resp.data.loggedUser) {
                     this.props.history.push("/");
                 }
-
-                console.log(
-                    "resp.2 in otherProfile: ",
-                    resp.data.userInfo.first
-                );
-                console.log(
-                    "resp.3 in otherProfile: ",
-                    resp.data.userInfo.last
-                );
-                console.log(
-                    "resp.4 in otherProfile: ",
-                    resp.data.userInfo.profile_pic_url
-                );
 
                 if (
                     !resp.data.userInfo.profile_pic_url.startsWith("http") &&
@@ -51,7 +43,6 @@ export default class OtherProfile extends React.Component {
                         "/" + resp.data.userInfo.profile_pic_url;
                 }
 
-                console.log("resp.5 in otherProfile: ", resp.data.friendship);
                 this.setState({
                     firstName: resp.data.userInfo.first,
                     lastName: resp.data.userInfo.last,
@@ -60,6 +51,7 @@ export default class OtherProfile extends React.Component {
                     bio: resp.data.userInfo.bio,
                     friendship: resp.data.friendship,
                 });
+                console.log("this.state.friendship2: ", this.state.friendship);
             })
             .catch((err) => {
                 console.log("err in otherProfile", err);
@@ -69,7 +61,6 @@ export default class OtherProfile extends React.Component {
     render() {
         return (
             <div className="otherProfile">
-                {/* <h1>Profile</h1> */}
                 <h1 className="otherProfileHeader">
                     {this.state.firstName + " " + this.state.lastName}
                 </h1>
@@ -79,8 +70,7 @@ export default class OtherProfile extends React.Component {
                         alt={this.state.firstName + this.state.lastName}
                     />
                 </div>
-                {/* <div>first name: {this.state.firstName}</div>
-                <div>last name: {this.state.lastName}</div> */}
+
                 <div className="otherProfileBio">
                     <h2>About {this.state.firstName}:</h2>
                     <p>{this.state.bio}</p>

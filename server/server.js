@@ -1,5 +1,12 @@
 const express = require("express");
 const app = express();
+
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    allowRequest: (req, callback) =>
+        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
+});
+
 const compression = require("compression");
 const path = require("path");
 const db = require("./db");
@@ -489,4 +496,20 @@ app.get("*", function (req, res) {
 
 app.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
+});
+
+io.on("connection", function (socket) {
+    console.log(`socket with the id ${socket.id} is now connected`);
+
+    socket.on("disconnect", function () {
+        console.log(`socket with the id ${socket.id} is now disconnected`);
+    });
+
+    socket.on("thanks", function (data) {
+        console.log(data);
+    });
+
+    socket.emit("welcome", {
+        message: "Welome. It is nice to see you",
+    });
 });

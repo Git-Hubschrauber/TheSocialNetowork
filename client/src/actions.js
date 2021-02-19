@@ -34,3 +34,13 @@ export async function acceptFriendship(id) {
         loggedUser: data.loggedUser,
     };
 }
+
+export async function checkFriendshipStatus(id) {
+    console.log("checkFriendshipStatus executed: ", id);
+
+    await axios.get("/api/user/" + id);
+    return {
+        type: "FRIENDSHIPSTATUS_CHECK",
+        checkedId: id,
+    };
+}

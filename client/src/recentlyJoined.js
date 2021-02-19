@@ -23,6 +23,13 @@ export default function ({ x }) {
     return (
         <div className="recentlyJoined">
             {newUsers.map((elem, index) => {
+                if (
+                    !elem.profile_pic_url.startsWith("http") &&
+                    !elem.profile_pic_url.startsWith("/")
+                ) {
+                    elem.profile_pic_url = "/" + elem.profile_pic_url;
+                }
+
                 return (
                     <div key={index}>
                         <Link to={"/user/" + elem.id}>

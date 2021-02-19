@@ -6,5 +6,12 @@ export function reducer(state = {}, action) {
             loggedUser: action.loggedUser,
         };
     }
+
+    if (action.type === "FRIENDSHIPSTATUS_CHECK") {
+        state = {
+            ...state,
+            checkedId: action.checkedId,
+        };
+    }
     return state;
 }

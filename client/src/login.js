@@ -75,7 +75,7 @@ export default class Login extends React.Component {
                         name="_csrf"
                         value="{{csrfToken}}"
                     ></input>
-                    <button onClick={() => this.handleClick()}>Submit</button>
+                    <button onClick={() => this.handleClick()}>LOGIN</button>
                 </div>
                 <p>
                     Not yet registered? Then please <Link to="/">REGISTER</Link>

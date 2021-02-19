@@ -87,7 +87,7 @@ export default class Registration extends React.Component {
                         name="_csrf"
                         value="{{csrfToken}}"
                     ></input>
-                    <button onClick={() => this.handleClick()}>Submit</button>
+                    <button onClick={() => this.handleClick()}>REGISTER</button>
                 </div>
                 <p>
                     Already registered? Then please{" "}
