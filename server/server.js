@@ -44,12 +44,14 @@ if (process.env.NODE_ENV === "production") {
     sessionSecret = require("./secrets.json").sessionSecret;
 }
 
-app.use(
-    cookieSession({
-        secret: sessionSecret,
-        maxAge: 1000 * 60 * 30,
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: sessionSecret,
+    maxAge: 1000 * 60 * 60,
+});
+app.use(cookieSessionMiddleware);
+io.use(function (socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 
 // app.use(
 //     express.urlencoded({
@@ -501,15 +503,42 @@ app.listen(process.env.PORT || 3001, function () {
 io.on("connection", function (socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
 
-    socket.on("disconnect", function () {
-        console.log(`socket with the id ${socket.id} is now disconnected`);
+    // if (!socket.request.session.userId) {
+    //     return socket.disconnect(true);
+    // }
+
+    // const userId = socket.request.session.userId;
+
+    // socket.on("disconnect", function () {
+    //     console.log(`socket with the id ${socket.id} is now disconnected`);
+    // });
+
+    socket.emit("hello", {
+        cohort: "Adobo",
     });
 
-    socket.on("thanks", function (data) {
+    // sends a message to ALL connected users
+    io.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to all sockets EXCEPT your own
+    socket.broadcast.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to a specific socket (think private messaging)
+    io.sockets.sockets.get(socket.id).emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to every socket except 1
+    io.sockets.sockets.get(socket.id).broadcast.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // we use 'on' to listen for incoming events / messages
+    socket.on("another cool message", (data) => {
         console.log(data);
-    });
-
-    socket.emit("welcome", {
-        message: "Welome. It is nice to see you",
     });
 });

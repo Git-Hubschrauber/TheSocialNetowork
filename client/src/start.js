@@ -6,6 +6,9 @@ import reduxPromise from "redux-promise";
 import { reducer } from "./reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import App from "./app";
+import { io } from "socket.io-client";
+// import { init } from "./socket";
+const socket = io.connect();
 
 const store = createStore(
     reducer,
@@ -16,6 +19,30 @@ let elem;
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
+    // init(store);
+    socket.on("hello", (data) => {
+        console.log("data: ", data);
+    });
+
+    socket.emit("another cool message", [
+        "andrea",
+        "david",
+        "oli",
+        "merle",
+        "pete",
+        "alistair",
+        "ivana",
+    ]);
+
+    socket.emit("another cool message", [
+        "andrea",
+        "david",
+        "oli",
+        "merle",
+        "pete",
+        "alistair",
+        "ivana",
+    ]);
     elem = (
         <Provider store={store}>
             <App />
