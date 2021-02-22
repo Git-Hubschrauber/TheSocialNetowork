@@ -140,3 +140,16 @@ module.exports.getFriendsandRequests = (id) => {
     const params = [id];
     return db.query(q, params);
 };
+
+module.exports.getLastMessages = () => {
+    const q = `SELECT first, last, profile_pic_url, chat.id, mes_sender_id, sent_message, sent_timestamp
+    FROM chat
+    JOIN users ON (mes_sender_id = users.id) ORDER BY chat.id DESC LIMIT 10`;
+    return db.query(q);
+};
+
+module.exports.insertMessage = (sender_id, message) => {
+    const q = `INSERT INTO chat (mes_sender_id, sent_message) VALUES (($1),($2))`;
+    const params = [sender_id, message];
+    return db.query(q, params);
+};

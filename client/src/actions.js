@@ -44,3 +44,21 @@ export async function checkFriendshipStatus(id) {
         checkedId: id,
     };
 }
+
+//   * An action for when the 10 most recent messages are received
+
+export function chatMessages(msgs) {
+    console.log("last 10 chat messages: ", msgs);
+
+    // await axios.get("/api/user/" + id);
+    return { type: "MESSAGES", messages: msgs };
+}
+
+// * An action for when individual new messages are received
+
+export function chatMessage(msg) {
+    console.log("chat messages sent: ", msg);
+
+    // await axios.get("/api/user/" + id);
+    return { type: "MESSAGE", message: msg };
+}

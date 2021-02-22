@@ -1,6 +1,7 @@
 import axios from "./axios";
 import React from "react";
 import FriendButton from "./hooks/friendButton";
+import { Link } from "react-router-dom";
 
 export default class OtherProfile extends React.Component {
     constructor(props) {
@@ -81,15 +82,9 @@ export default class OtherProfile extends React.Component {
                         friendshipState={this.state.friendship}
                     />
                 </div>
-                <button
-                    className="backBtn"
-                    onClick={() => {
-                        console.log("back clicked");
-                        location.pathname = "/users";
-                    }}
-                >
-                    BACK
-                </button>
+                <Link to={"/users"}>
+                    <button className="backBtn">BACK</button>
+                </Link>
             </div>
         );
     }

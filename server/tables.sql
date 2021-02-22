@@ -26,3 +26,12 @@ sender_id INT REFERENCES users(id) NOT NULL,
 recipient_id INT REFERENCES users(id) NOT NULL,
 accepted BOOLEAN DEFAULT false
 );
+
+
+CREATE TABLE chat (
+    
+    id SERIAL PRIMARY KEY,
+    mes_sender_id INT REFERENCES users(id) NOT NULL,
+    sent_message VARCHAR NOT NULL,
+    sent_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

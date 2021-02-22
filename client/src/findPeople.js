@@ -58,14 +58,9 @@ export default function () {
                     );
                 })}
             </div>
-            <button
-                className="backBtn"
-                onClick={() => {
-                    location = "/";
-                }}
-            >
-                BACK
-            </button>
+            <Link to={"/"}>
+                <button className="backBtn">BACK</button>
+            </Link>
         </div>
     );
 }

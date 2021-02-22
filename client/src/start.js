@@ -7,7 +7,7 @@ import { reducer } from "./reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import App from "./app";
 import { io } from "socket.io-client";
-// import { init } from "./socket";
+import { init } from "./socket";
 const socket = io.connect();
 
 const store = createStore(
@@ -19,9 +19,9 @@ let elem;
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
-    // init(store);
-    socket.on("hello", (data) => {
-        console.log("data: ", data);
+    init(store);
+    socket.on("chatMessages", (data) => {
+        console.log("chatMessages: ", data);
     });
 
     socket.emit("another cool message", [
@@ -34,15 +34,6 @@ if (location.pathname === "/welcome") {
         "ivana",
     ]);
 
-    socket.emit("another cool message", [
-        "andrea",
-        "david",
-        "oli",
-        "merle",
-        "pete",
-        "alistair",
-        "ivana",
-    ]);
     elem = (
         <Provider store={store}>
             <App />

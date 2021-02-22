@@ -496,49 +496,58 @@ app.get("*", function (req, res) {
 //
 //
 
-app.listen(process.env.PORT || 3001, function () {
+// app.listen(process.env.PORT || 3001, function () {
+//     console.log("I'm listening.");
+// });
+
+server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
 
 io.on("connection", function (socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
 
-    // if (!socket.request.session.userId) {
-    //     return socket.disconnect(true);
-    // }
+    const userId = socket.request.session.userId;
 
-    // const userId = socket.request.session.userId;
+    if (!socket.request.session.userId) {
+        console.log("socket disconnected");
+        return socket.disconnect(true);
+    }
 
-    // socket.on("disconnect", function () {
-    //     console.log(`socket with the id ${socket.id} is now disconnected`);
+    db.getLastMessages().then((results) => {
+        socket.emit("chatMessages", results.rows.reverse());
+    });
+
+    //
+    //
+
+    socket.on("chatMessage", async (msg) => {
+        console.log("msg-data: ", msg);
+        await db.insertMessage(userId, msg);
+    });
+    //
+
+    //     Start listening for the event that the client will emit to send a chat message. When this event is received you must
+
+    // Insert the new message into the table
+
+    // Do another query to get the message sender's first, last, and image url by their user id. Once you have the user info, build an object that looks exactly like the objects in the array containing the must recent ten messages
+
+    // Emit an event to ALL clients (io.emit) with the new chat message object as the payload
+
+    // socket.on("sentMessage", (data) => {
+    //     console.log("data: ", data);
     // });
-
-    socket.emit("hello", {
-        cohort: "Adobo",
-    });
-
-    // sends a message to ALL connected users
-    io.emit("hello", {
-        cohort: "Adobo",
-    });
-
-    // sends a message to all sockets EXCEPT your own
-    socket.broadcast.emit("hello", {
-        cohort: "Adobo",
-    });
-
-    // sends a message to a specific socket (think private messaging)
-    io.sockets.sockets.get(socket.id).emit("hello", {
-        cohort: "Adobo",
-    });
-
-    // sends a message to every socket except 1
-    io.sockets.sockets.get(socket.id).broadcast.emit("hello", {
-        cohort: "Adobo",
-    });
-
-    // we use 'on' to listen for incoming events / messages
-    socket.on("another cool message", (data) => {
-        console.log(data);
-    });
+    //;
+    // db.getUserInfo(userId);
+    // db.getLastMessages().then((results) => {
+    //     io.emit("postMessage", {
+    //         first: "X",
+    //         last: "Y",
+    //         profile_pic_url: "",
+    //         mes_sender_id: userId,
+    //         sent_message: "Hello World",
+    //         sent_timestamp: "now",
+    //     });
+    // });
 });

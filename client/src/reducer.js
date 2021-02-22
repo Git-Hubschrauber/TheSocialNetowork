@@ -13,5 +13,20 @@ export function reducer(state = {}, action) {
             checkedId: action.checkedId,
         };
     }
+
+    if (action.type === "MESSAGES") {
+        state = {
+            ...state,
+            messages: action.messages,
+        };
+    }
+
+    if (action.type === "MESSAGE") {
+        state = {
+            ...state,
+            message: action.message,
+        };
+    }
+
     return state;
 }

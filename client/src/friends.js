@@ -287,15 +287,9 @@ export default function () {
             {receivedfriendshipRequests2}
 
             {sendfriendshipRequests2}
-            <button
-                className="backBtn"
-                onClick={() => {
-                    console.log("back clicked");
-                    location.pathname = "/";
-                }}
-            >
-                BACK
-            </button>
+            <Link to={"/"}>
+                <button className="backBtn">BACK</button>
+            </Link>
         </div>
     );
 }

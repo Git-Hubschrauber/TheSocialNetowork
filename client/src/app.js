@@ -9,6 +9,7 @@ import OtherProfile from "./otherProfile";
 import FindPeople from "./findPeople";
 import { Link } from "react-router-dom";
 import Friends from "./friends";
+import Chat from "./chat";
 
 import { BrowserRouter, Route } from "react-router-dom";
 // import BioEditor from "./bio-editor";
@@ -136,13 +137,14 @@ export default class App extends React.Component {
                             {this.state.firstName + " " + this.state.lastName}
                         </h1>
                         <h2>
-                            <Link to="/friends">
-                                Friends and friend requests
-                            </Link>
+                            <Link to="/friends">Friends and invitations</Link>
                         </h2>
 
                         <h2>
                             <Link to="/users">Find new people</Link>
+                        </h2>
+                        <h2>
+                            <Link to="/chat">Chat</Link>
                         </h2>
                         <h2>
                             <Link to="/">Your profile</Link>
@@ -173,6 +175,7 @@ export default class App extends React.Component {
                         )}
                     />
                     <Route path="/friends" render={() => <Friends />} />
+                    <Route path="/chat" render={() => <Chat />} />
                     <Route
                         path="/user/:id"
                         render={(props) => (
