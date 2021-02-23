@@ -1,5 +1,6 @@
 import ProfilePicture from "./profile-picture";
 import BioEditor from "./bio-editor";
+import DeleteAccount from "./hooks/deleteAccount";
 
 export default function Profile(props) {
     return (
@@ -18,6 +19,8 @@ export default function Profile(props) {
                 >
                     New profile picture
                 </button>
+
+                <DeleteAccount />
             </div>
 
             <BioEditor

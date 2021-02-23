@@ -311,6 +311,26 @@ app.post("/deleteProfilePicture", async (req, res) => {
     });
 });
 
+app.post("/api/deleteAccount", async (req, res) => {
+    const userId = req.session.userId;
+
+    console.log("/delete account here");
+
+    try {
+        await db.deleteAccountChat(userId);
+        await db.deleteAccountFriendships(userId);
+        await db.deleteAccountUsers(userId);
+
+        req.session = null;
+
+        console.log("account deletion successful");
+
+        return res.redirect("/welcome");
+    } catch (err) {
+        console.log("error in server deleteAccount: ", err);
+    }
+});
+
 //
 //
 //
@@ -344,16 +364,6 @@ app.get("/api/user/:id", async (req, res) => {
     try {
         const results1 = await db.getUserInfo(req.params.id);
         const results2 = await db.getFriendshipStatus(userId, recipient_id);
-        console.log("other user id results: ", results1.rows[0]);
-        console.log("friendship results: ", results2.rows[0]);
-        // if (!results2.rows[0]) {
-        //     results2.rows[0] = false;
-        //     console.log(
-        //         "friendship results2.rows[0]: ",
-        //         results2.rows[0],
-        //         results1.rows[0]
-        //     );
-        // }
 
         return res.json({
             userInfo: results1.rows[0],
@@ -442,24 +452,8 @@ app.get("/api/friends/", async (req, res) => {
 
     try {
         const { rows } = await db.getFriendsandRequests(loggedId);
-        // console.log("results in /friends", rows);
-        // const friendIds = [];
-        // rows.forEach((element) => {
-        //     if (element.sender_id == loggedId) {
-        //         friendIds.push(element.recipient_id);
-        //     }
-        //     if (element.recipient_id == loggedId) {
-        //         friendIds.push(element.sender_id);
-        //     }
-        // });
-        // console.log("friendIds: ", friendIds);
-        // const results2 = await db.getFriends2(friendIds);
-        // console.log("results2 in /friends", results2.rows);
 
         res.json({ friendships: rows, loggedUser: loggedId });
-
-        // console.log("friends: ", friends);
-        // res.json({ results: friends });
     } catch (err) {
         console.log("err in /friends", err);
         res.json({ error: true });
@@ -480,6 +474,18 @@ app.get("/api/friend/:id", async (req, res) => {
         res.json({ error: true });
     }
 });
+
+app.get("/api/viewFriends/:id", async (req, res) => {
+    try {
+        const { rows } = await db.getOthersFriends(req.params.id);
+        console.log("server results in /viewfriends", rows);
+        res.json(rows.reverse());
+    } catch (err) {
+        console.log("err in /friends", err);
+        res.json({ error: true });
+    }
+});
+
 //
 //
 //
@@ -527,7 +533,7 @@ io.on("connection", function (socket) {
             await db.insertMessage(userId, msg);
             const { rows } = await db.getLastMessageInfo();
             console.log("sender Info: ", rows[0]);
-            io.emit("newChatMessage", rows[0]);
+            io.emit("newMessage", rows[0]);
         } catch (err) {
             console.log("err in server socket chatMessage", err);
         }

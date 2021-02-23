@@ -35,5 +35,12 @@ export function reducer(state = {}, action) {
         };
     }
 
+    if (action.type === "OTHERS_FRIENDS") {
+        state = {
+            ...state,
+            friends: action.friends,
+        };
+    }
+
     return state;
 }

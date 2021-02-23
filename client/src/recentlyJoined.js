@@ -23,6 +23,10 @@ export default function ({ x }) {
     return (
         <div className="recentlyJoined">
             {newUsers.map((elem, index) => {
+                if (!elem.profile_pic_url) {
+                    elem.profile_pic_url = "/default.png";
+                }
+
                 if (
                     !elem.profile_pic_url.startsWith("http") &&
                     !elem.profile_pic_url.startsWith("/")

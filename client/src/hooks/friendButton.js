@@ -6,14 +6,14 @@ export default function (props) {
     let friendshipState;
 
     let [friendshipStatus, setfriendshipStatus] = useState("none");
-    console.log("friendshipState outside: ", friendshipState);
-    console.log("friendshipState id outside: ", id);
+    // console.log("friendshipState outside: ", friendshipState);
+    // console.log("friendshipState id outside: ", id);
 
     useEffect(() => {
         axios.get("/api/user/" + id).then((resp) => {
-            console.log("response in friendsbutton: ", resp.data.friendship);
+            // console.log("response in friendsbutton: ", resp.data.friendship);
             friendshipState = resp.data.friendship;
-            console.log("friendshipState inside: ", friendshipState);
+            // console.log("friendshipState inside: ", friendshipState);
             if (friendshipState === undefined) {
                 return setfriendshipStatus("none");
             }
@@ -40,13 +40,13 @@ export default function (props) {
         });
     }, []);
 
-    console.log("friendship request made to:", id);
+    // console.log("friendship request made to:", id);
 
     const makeFriendship = () => {
         axios
             .post("/api/userInvitation/" + id)
             .then((data) => {
-                console.log("response friendship request Client", data);
+                // console.log("response friendship request Client", data);
                 setfriendshipStatus("sent");
             })
             .catch((err) => {
@@ -58,7 +58,7 @@ export default function (props) {
         axios
             .post("/api/acceptInvitation/" + id)
             .then((data) => {
-                console.log("response friendship request Client", data);
+                // console.log("response friendship request Client", data);
                 setfriendshipStatus("accepted");
             })
             .catch((err) => {
@@ -68,11 +68,11 @@ export default function (props) {
 
     const cancelFriendship = function () {
         const id = props.id;
-        console.log("friendship cancel request made");
+        // console.log("friendship cancel request made");
         axios
             .post("/api/cancelInvitation/" + id)
             .then(({ data }) => {
-                console.log("friendship canceled", data);
+                // console.log("friendship canceled", data);
                 setfriendshipStatus("none");
             })
             .catch((err) => {

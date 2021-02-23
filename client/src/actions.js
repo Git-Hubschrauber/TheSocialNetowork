@@ -66,6 +66,17 @@ export function sendNewMessage(newMessage) {
 
     return {
         type: "NEW_MESSAGE",
-        messages: newMessage,
+        newMessage,
+    };
+}
+
+export async function getOthersFriends(id) {
+    const { data } = await axios.get("/api/viewFriends/" + id);
+    const friends = data.reverse();
+    console.log("actions resp. from /api/viewFriends/: ", friends);
+
+    return {
+        type: "OTHERS_FRIENDS",
+        friends,
     };
 }

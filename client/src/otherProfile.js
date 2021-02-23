@@ -1,6 +1,7 @@
 import axios from "./axios";
 import React from "react";
 import FriendButton from "./hooks/friendButton";
+import OthersFriends from "./hooks/othersFriends.js";
 import { Link } from "react-router-dom";
 
 export default class OtherProfile extends React.Component {
@@ -20,20 +21,24 @@ export default class OtherProfile extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("this.props.match.params.id: ", this.props.match.params.id);
+        // console.log("this.props.match.params.id: ", this.props.match.params.id);
         const id = this.props.match.params.id;
 
         axios
             .get("/api/user/" + id)
             .then((resp) => {
-                console.log("resp. in otherProfile: ", resp.data);
-                console.log(
-                    "friendship in otherProfile: ",
-                    resp.data.friendship
-                );
-                console.log("this.state.friendship1: ", this.state.friendship);
+                // console.log("resp. in otherProfile: ", resp.data);
+                // console.log(
+                //     "friendship in otherProfile: ",
+                //     resp.data.friendship
+                // );
+                // console.log("this.state.friendship1: ", this.state.friendship);
                 if (this.props.match.params.id == resp.data.loggedUser) {
                     this.props.history.push("/");
+                }
+
+                if (!resp.data.userInfo.profile_pic_url) {
+                    resp.data.userInfo.profile_pic_url = "/default.png";
                 }
 
                 if (
@@ -52,7 +57,7 @@ export default class OtherProfile extends React.Component {
                     bio: resp.data.userInfo.bio,
                     friendship: resp.data.friendship,
                 });
-                console.log("this.state.friendship2: ", this.state.friendship);
+                // console.log("this.state.friendship2: ", this.state.friendship);
             })
             .catch((err) => {
                 console.log("err in otherProfile", err);
@@ -64,14 +69,15 @@ export default class OtherProfile extends React.Component {
             <div className="otherProfile">
                 <h1 className="otherProfileHeader">
                     {this.state.firstName + " " + this.state.lastName}
-                </h1>
+                </h1>{" "}
+                <OthersFriends id={this.props.match.params.id} />
                 <div className="otherProfilePic">
                     <img
+                        className="otherProfileImg"
                         src={this.state.ProfilePictureUrl}
                         alt={this.state.firstName + this.state.lastName}
                     />
                 </div>
-
                 <div className="otherProfileBio">
                     <h2>About {this.state.firstName}:</h2>
                     <p>{this.state.bio}</p>

@@ -85,7 +85,7 @@ module.exports.deleteImage = (id, def) => {
 
 module.exports.getNewUsers = () => {
     const q = `SELECT * FROM users
-    ORDER BY created_at DESC LIMIT 3`;
+    ORDER BY id DESC LIMIT 3`;
     return db.query(q);
 };
 
@@ -141,6 +141,16 @@ module.exports.getFriendsandRequests = (id) => {
     return db.query(q, params);
 };
 
+module.exports.getOthersFriends = (id) => {
+    const q = `SELECT users.id, first, last, profile_pic_url, accepted, sender_id, recipient_id 
+    FROM friendships
+    JOIN users
+    ON (recipient_id = $1 AND sender_id = users.id AND accepted = TRUE)
+    OR (sender_id = $1 AND recipient_id = users.id AND accepted = TRUE)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
 module.exports.getLastMessages = () => {
     const q = `SELECT first, last, profile_pic_url, chat.id, mes_sender_id, sent_message, sent_timestamp
     FROM chat
@@ -159,4 +169,28 @@ module.exports.getLastMessageInfo = () => {
     FROM chat
     JOIN users ON (mes_sender_id = users.id) ORDER BY chat.id DESC LIMIT 1`;
     return db.query(q);
+};
+
+module.exports.deleteAccountChat = (id) => {
+    const q = `DELETE
+    FROM chat
+    WHERE  mes_sender_id =  ($1)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+module.exports.deleteAccountFriendships = (id) => {
+    const q = `DELETE
+    FROM friendships
+    WHERE  recipient_id = ($1) OR sender_id =  ($1)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+module.exports.deleteAccountUsers = (id) => {
+    const q = `DELETE
+    FROM users
+    WHERE  id = ($1)`;
+    const params = [id];
+    return db.query(q, params);
 };

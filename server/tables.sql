@@ -1,6 +1,8 @@
+DROP TABLE IF EXISTS chat;
 DROP TABLE IF EXISTS friendships;
 DROP TABLE IF EXISTS reset_codes;
 DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users (
       id SERIAL PRIMARY KEY,

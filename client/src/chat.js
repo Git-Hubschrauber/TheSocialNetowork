@@ -12,25 +12,27 @@ import { socket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { chatMessages, chatMessage } from "./actions";
+import { chatMessage } from "./actions";
 
 export default function () {
-    const textRef = useRef("");
-    const scrollRef = useRef();
+    const scrollRef = useRef(null);
+    const textRef = useRef(null);
     const dispatch = useDispatch();
     const [msg, setMsg] = useState("");
 
     const lastTenMessages = useSelector((state) => state.messages);
 
-    // const scrollToBottom = () => {
-    //     scrollRef.current.scrollTop =
-    //         scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-    // };
+    const scrollToBottom = () => {
+        scrollRef.current.scrollTop =
+            scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+    };
 
     useEffect(() => {
-        // scrollToBottom();
+        if (lastTenMessages) {
+            scrollToBottom();
+        }
         dispatch(chatMessage(msg));
-    }, []);
+    }, [lastTenMessages]);
 
     function handleChange(event) {
         textRef.current.value = event.target.value;
@@ -57,7 +59,7 @@ export default function () {
                         <div>
                             <img
                                 className="chatImg"
-                                src={element.profile_pic_url}
+                                src={element.profile_pic_url || "/default.png"}
                             />
                         </div>
                         <div>
