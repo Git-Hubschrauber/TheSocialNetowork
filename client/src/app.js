@@ -42,6 +42,9 @@ export default class App extends React.Component {
         if (response.data.bio === null || response.data.bio.length == 2) {
             console.log("no bio info");
             return this.setState({
+                firstName: first,
+                lastName: last,
+                ProfilePictureUrl: profile_pic_url || "/default.png",
                 noBioInfo: false,
             });
         }

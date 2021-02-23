@@ -153,3 +153,10 @@ module.exports.insertMessage = (sender_id, message) => {
     const params = [sender_id, message];
     return db.query(q, params);
 };
+
+module.exports.getLastMessageInfo = () => {
+    const q = `SELECT first, last, profile_pic_url, chat.id, mes_sender_id, sent_message, sent_timestamp
+    FROM chat
+    JOIN users ON (mes_sender_id = users.id) ORDER BY chat.id DESC LIMIT 1`;
+    return db.query(q);
+};

@@ -28,5 +28,12 @@ export function reducer(state = {}, action) {
         };
     }
 
+    if (action.type === "NEW_MESSAGE") {
+        state = {
+            ...state,
+            messages: [...state.messages, action.newMessage],
+        };
+    }
+
     return state;
 }

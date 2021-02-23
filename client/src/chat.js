@@ -10,85 +10,93 @@
 
 import { socket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { chatMessages, chatMessage } from "./actions";
 
 export default function () {
+    const textRef = useRef("");
+    const scrollRef = useRef();
     const dispatch = useDispatch();
     const [msg, setMsg] = useState("");
 
-    useEffect((msg) => {
+    const lastTenMessages = useSelector((state) => state.messages);
+
+    // const scrollToBottom = () => {
+    //     scrollRef.current.scrollTop =
+    //         scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+    // };
+
+    useEffect(() => {
+        // scrollToBottom();
         dispatch(chatMessage(msg));
     }, []);
 
-    const lastTenMessages = useSelector(
-        (state) =>
-            state.messages &&
-            state.messages.map((element) => {
-                console.log("mes in useSelector: ", element);
-                return element;
-            })
-    );
-
     function handleChange(event) {
+        textRef.current.value = event.target.value;
         setMsg(event.target.value);
 
-        console.log("Message input: ", event.target.value);
-        console.log("Msg: ", msg);
+        // console.log("Message input: ", event.target.value);
+        // console.log("Msg: ", msg);
     }
 
     if (!lastTenMessages) {
         return null;
     }
 
-    console.log("last ten messages: ", lastTenMessages);
+    // console.log("last ten messages: ", lastTenMessages);
     let existingMessages;
 
     if (lastTenMessages.length === 0) {
         existingMessages = <h2>No messages</h2>;
     } else {
         existingMessages = (
-            <div>
+            <div className="messagebox1" ref={scrollRef}>
                 {lastTenMessages.map((element) => (
-                    <div key={element.id}>
-                        <img
-                            className="chatImg"
-                            src={element.profile_pic_url}
-                        />
-                        <p>{element.first + " " + element.last}</p>
-                        <p>{element.sent_message}</p>
-                        <p>
-                            {element.sent_timestamp.slice(0, 10) +
-                                " / " +
-                                element.sent_timestamp.slice(11, 19)}
-                        </p>
+                    <div key={element.id} className="messagebox">
+                        <div>
+                            <img
+                                className="chatImg"
+                                src={element.profile_pic_url}
+                            />
+                        </div>
+                        <div>
+                            <div className="chatSender">
+                                {element.first + " " + element.last}
+                            </div>
+                            <div className="chatTime">
+                                {element.sent_timestamp.slice(0, 10) +
+                                    " / " +
+                                    element.sent_timestamp.slice(11, 19)}
+                            </div>
+                            <div className="chatMessage">
+                                {element.sent_message}
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
         );
     }
 
-    // if (!x) {
-    //     return null;
-    // }
-
-    // let x;
-    // if (x.length === 0) {
-    //     x = <div className="x"></div>;
-    // } else {
-    //     x = <div className="x"></div>;
-    // }
-
     return (
         <div>
-            <div className="messagebox">{existingMessages}</div>
-            <textarea className="chatbox" onChange={handleChange}></textarea>
+            <div className="messagebox2">{existingMessages}</div>
+            <textarea
+                className="chatbox"
+                id="chatbox"
+                onChange={handleChange}
+                ref={textRef}
+            ></textarea>
             <button
                 className="chatSendBtn"
                 onClick={() => {
                     dispatch(chatMessage(msg));
                     socket.emit("chatMessage", msg);
+
+                    console.log("reset?");
+
+                    textRef.current.value = "";
                 }}
             >
                 SEND

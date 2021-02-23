@@ -515,39 +515,21 @@ io.on("connection", function (socket) {
     }
 
     db.getLastMessages().then((results) => {
-        socket.emit("chatMessages", results.rows.reverse());
+        io.emit("chatMessages", results.rows.reverse());
     });
 
     //
     //
 
     socket.on("chatMessage", async (msg) => {
-        console.log("msg-data: ", msg);
-        await db.insertMessage(userId, msg);
+        try {
+            console.log("msg-data: ", msg);
+            await db.insertMessage(userId, msg);
+            const { rows } = await db.getLastMessageInfo();
+            console.log("sender Info: ", rows[0]);
+            io.emit("newChatMessage", rows[0]);
+        } catch (err) {
+            console.log("err in server socket chatMessage", err);
+        }
     });
-    //
-
-    //     Start listening for the event that the client will emit to send a chat message. When this event is received you must
-
-    // Insert the new message into the table
-
-    // Do another query to get the message sender's first, last, and image url by their user id. Once you have the user info, build an object that looks exactly like the objects in the array containing the must recent ten messages
-
-    // Emit an event to ALL clients (io.emit) with the new chat message object as the payload
-
-    // socket.on("sentMessage", (data) => {
-    //     console.log("data: ", data);
-    // });
-    //;
-    // db.getUserInfo(userId);
-    // db.getLastMessages().then((results) => {
-    //     io.emit("postMessage", {
-    //         first: "X",
-    //         last: "Y",
-    //         profile_pic_url: "",
-    //         mes_sender_id: userId,
-    //         sent_message: "Hello World",
-    //         sent_timestamp: "now",
-    //     });
-    // });
 });
