@@ -11,10 +11,7 @@ export default function () {
     const [msg, setMsg] = useState("");
 
     const lastTenMessages = useSelector((state) => state.messages);
-    const otherOnlineUsers = [
-        ...new Set(useSelector((state) => state.otherOnlineUsers)),
-    ];
-
+    const otherOnlineUsers = useSelector((state) => state.otherOnlineUsers);
     const scrollToBottom = () => {
         scrollRef.current.scrollTop =
             scrollRef.current.scrollHeight - scrollRef.current.clientHeight;

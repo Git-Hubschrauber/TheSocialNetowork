@@ -43,6 +43,10 @@ export function reducer(state = {}, action) {
     }
 
     if (action.type === "OTHERS_ONLINEUSERS") {
+        console.log(
+            "action.otherOnlineUsersData: ",
+            action.otherOnlineUsersData
+        );
         state = {
             ...state,
             otherOnlineUsers: action.otherOnlineUsersData,

@@ -525,7 +525,7 @@ io.on("connection", function (socket) {
     //
     //
     //
-    onlineUsers[socket.id] = userId;
+
     console.log("onlineUsers in server: ", Object.values(onlineUsers));
     let onlineUsersIds = Object.values(onlineUsers);
     let otherOnlineUsersIds = [
@@ -542,11 +542,11 @@ io.on("connection", function (socket) {
         console.log("newUser joined: ", userId);
         db.getUserInfo(userId).then(({ rows }) => {
             console.log("server - new user joined: ", rows);
-            let newUserInfo = rows;
+            let newUserInfo = rows[0];
             io.emit("newUserJoined", newUserInfo);
         });
     }
-
+    onlineUsers[socket.id] = userId;
     //
     //
 
@@ -581,7 +581,7 @@ io.on("connection", function (socket) {
         ];
         db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
             console.log("OtheronlineUsers Data: ", rows);
-            socket.emit("whoElseIsOnline", rows);
+            io.emit("whoElseIsOnline", rows);
         });
         console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);
     });
