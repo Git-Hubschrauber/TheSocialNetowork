@@ -125,7 +125,7 @@ module.exports.getFriends = (id) => {
     return db.query(q, params);
 };
 
-module.exports.getFriends2 = (elem) => {
+module.exports.getOnlineUsers = (elem) => {
     const q = `Select * FROM users WHERE id = ANY($1)`;
     const params = [elem];
     return db.query(q, params);

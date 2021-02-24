@@ -523,16 +523,49 @@ footer {
     font-size: 18px;
 }
 
+.usersOnline {
+    overflow-y: auto;
+    height: 57vh;
+    width: 30vw;
+    position: relative;
+    left: 2vw;
+    top: 3vh;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+
+    margin: 5px;
+    background-color: rgba(250, 250, 250, 0.1);
+}
+
+.usersOnline h1 {
+    width: 80%;
+    height: fit-content;
+}
+
+.mappingOnlineUsers {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    margin: 5px;
+    position: relative;
+    top: -15vh;
+}
+
+.mappingSingleOnlineUsers {
+    width: 100px;
+    height: 140px;
+}
+
+.onlineUsersName {
+    color: blue;
+    position: relative;
+    top: -10px;
+}
 .messagebox {
     display: grid;
     grid-template-columns: 100px 1fr;
     width: 100%;
-    /* height: 50vh;
-    width: 40vw;
-    position: relative;
-    left: 22.2%;
-    top: 5vh;
-    background-color: rgba(250, 250, 250, 0.2); */
 
     color: white;
 }
@@ -550,15 +583,24 @@ footer {
     height: 57vh;
     width: 40vw;
     position: relative;
-    left: 22.2%;
-    top: 3vh;
+    left: 35%;
+    top: -54vh;
     background-color: rgba(250, 250, 250, 0.1);
 }
+
+.messagebox2 {
+    height: 0px;
+}
+
 .chatbox {
     height: 10vh;
     width: 35vw;
-    position: relative;
-    top: 6vh;
+    /* position: relative;
+    bottom: 30vw;
+    left: 5%; */
+    position: absolute;
+    bottom: 10vh;
+    right: 12.5vw;
 }
 
 .chatImg {
@@ -570,7 +612,7 @@ footer {
 .chatSendBtn {
     position: absolute;
     bottom: 13.5vh;
-    margin-left: 2vw;
+    right: 7vw;
 }
 
 .chatSender {

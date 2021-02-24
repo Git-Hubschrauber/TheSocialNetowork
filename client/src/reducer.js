@@ -42,5 +42,19 @@ export function reducer(state = {}, action) {
         };
     }
 
+    if (action.type === "OTHERS_ONLINEUSERS") {
+        state = {
+            ...state,
+            otherOnlineUsers: action.otherOnlineUsersData,
+        };
+    }
+
+    if (action.type === "NEW_ONLINEUSER") {
+        state = {
+            ...state,
+            otherOnlineUsers: [...state.otherOnlineUsers, action.newUserInfo],
+        };
+    }
+
     return state;
 }

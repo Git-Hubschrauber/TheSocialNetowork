@@ -1,13 +1,3 @@
-// * chat.js
-
-//     * Must import the socket object from socket.js so that `emit` can be called on it
-
-//     * Component must use `useSelector` to get the chat messages out of Redux. It needs to map them into elements and render them
-
-//     * Component must render a textarea in which the user can type and provide some mechanism for the user to send the message she has typed
-
-//     * Whatever UI you choose for sending the message, what your code must do is emit a socket event with the current value of the textarea in the payload
-
 import { socket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
@@ -21,32 +11,49 @@ export default function () {
     const [msg, setMsg] = useState("");
 
     const lastTenMessages = useSelector((state) => state.messages);
+    const otherOnlineUsers = [
+        ...new Set(useSelector((state) => state.otherOnlineUsers)),
+    ];
 
     const scrollToBottom = () => {
         scrollRef.current.scrollTop =
             scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     };
 
+    //
+    //
+
     useEffect(() => {
         if (lastTenMessages) {
             scrollToBottom();
         }
-        dispatch(chatMessage(msg));
     }, [lastTenMessages]);
+
+    useEffect(() => {
+        dispatch(chatMessage(msg));
+    }, []);
+
+    useEffect(() => {
+        if (otherOnlineUsers) {
+            console.log("newUser in chat");
+            // otherOnlineUsers = [...new Set(otherOnlineUsers)];
+        }
+    }, [otherOnlineUsers]);
+
+    //
+    //
 
     function handleChange(event) {
         textRef.current.value = event.target.value;
         setMsg(event.target.value);
-
-        // console.log("Message input: ", event.target.value);
-        // console.log("Msg: ", msg);
     }
 
     if (!lastTenMessages) {
         return null;
     }
 
-    // console.log("last ten messages: ", lastTenMessages);
+    console.log("otherOnlineUsers in chat: ", otherOnlineUsers);
+
     let existingMessages;
 
     if (lastTenMessages.length === 0) {
@@ -81,24 +88,49 @@ export default function () {
         );
     }
 
+    let online;
+    if (otherOnlineUsers.length === 0) {
+        online = <h1>No other user online</h1>;
+    } else {
+        online = (
+            <div className="mappingOnlineUsers">
+                {otherOnlineUsers.map((element) => (
+                    <div className="mappingSingleOnlineUsers" key={element.id}>
+                        <img
+                            className="chatImg"
+                            src={element.profile_pic_url || "/default.png"}
+                        />
+                        <div className="onlineUsersName">
+                            <div>{element.first}</div>
+                            <div>{element.last}</div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <div>
+            <div className="usersOnline">
+                <h1>Users online</h1>
+                {online}
+            </div>
             <div className="messagebox2">{existingMessages}</div>
             <textarea
+                ref={textRef}
                 className="chatbox"
                 id="chatbox"
+                placeholder="Enter message"
                 onChange={handleChange}
-                ref={textRef}
             ></textarea>
             <button
                 className="chatSendBtn"
                 onClick={() => {
                     dispatch(chatMessage(msg));
                     socket.emit("chatMessage", msg);
-
-                    console.log("reset?");
-
                     textRef.current.value = "";
+                    textRef.current.focus();
                 }}
             >
                 SEND

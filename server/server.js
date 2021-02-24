@@ -179,7 +179,7 @@ app.get("/api/loggedUser", async (req, res) => {
     // console.log("req.body in /api/user: ", req.body);
     // console.log("req.params in /api/user: ", req.params);
     let results = await db.getUserInfo(userId);
-    console.log("/user results: ", results.rows[0]);
+    // console.log("/user results: ", results.rows[0]);
 
     res.json(results.rows[0]);
 });
@@ -478,7 +478,7 @@ app.get("/api/friend/:id", async (req, res) => {
 app.get("/api/viewFriends/:id", async (req, res) => {
     try {
         const { rows } = await db.getOthersFriends(req.params.id);
-        console.log("server results in /viewfriends", rows);
+        // console.log("server results in /viewfriends", rows);
         res.json(rows.reverse());
     } catch (err) {
         console.log("err in /friends", err);
@@ -509,6 +509,7 @@ app.get("*", function (req, res) {
 server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
+let onlineUsers = {};
 
 io.on("connection", function (socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
@@ -517,8 +518,37 @@ io.on("connection", function (socket) {
 
     if (!socket.request.session.userId) {
         console.log("socket disconnected");
+
         return socket.disconnect(true);
     }
+
+    //
+    //
+    //
+    onlineUsers[socket.id] = userId;
+    console.log("onlineUsers in server: ", Object.values(onlineUsers));
+    let onlineUsersIds = Object.values(onlineUsers);
+    let otherOnlineUsersIds = [
+        ...new Set(onlineUsersIds.filter((element) => element !== userId)),
+    ];
+
+    console.log("otherOnlineUsers in server: ", otherOnlineUsersIds);
+    db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
+        console.log("OtheronlineUsers Data: ", rows);
+        socket.emit("whoElseIsOnline", rows);
+    });
+
+    if (!onlineUsersIds.includes(userId)) {
+        console.log("newUser joined: ", userId);
+        db.getUserInfo(userId).then(({ rows }) => {
+            console.log("server - new user joined: ", rows);
+            let newUserInfo = rows;
+            io.emit("newUserJoined", newUserInfo);
+        });
+    }
+
+    //
+    //
 
     db.getLastMessages().then((results) => {
         io.emit("chatMessages", results.rows.reverse());
@@ -537,5 +567,22 @@ io.on("connection", function (socket) {
         } catch (err) {
             console.log("err in server socket chatMessage", err);
         }
+    });
+
+    socket.on("disconnect", () => {
+        delete onlineUsers[socket.id];
+        console.log(
+            "onlineUsers in server after a disconnect: ",
+            Object.values(onlineUsers)
+        );
+        onlineUsersIds = Object.values(onlineUsers);
+        otherOnlineUsersIds = [
+            ...new Set(onlineUsersIds.filter((element) => element !== userId)),
+        ];
+        db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
+            console.log("OtheronlineUsers Data: ", rows);
+            socket.emit("whoElseIsOnline", rows);
+        });
+        console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);
     });
 });

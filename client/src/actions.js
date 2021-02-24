@@ -80,3 +80,17 @@ export async function getOthersFriends(id) {
         friends,
     };
 }
+
+export function OtherOnlineUsers(otherOnlineUsersData) {
+    return {
+        type: "OTHERS_ONLINEUSERS",
+        otherOnlineUsersData,
+    };
+}
+
+export function newOnlineUser(newUserInfo) {
+    return {
+        type: "NEW_ONLINEUSER",
+        newUserInfo,
+    };
+}
