@@ -4,6 +4,7 @@ import {
     sendNewMessage,
     OtherOnlineUsers,
     newOnlineUser,
+    displayFriendRequest,
 } from "./actions";
 import { io } from "socket.io-client";
 
@@ -36,6 +37,12 @@ export const init = (store) => {
         socket.on("newUserJoined", (newUserInfo) => {
             console.log("newUserJoined: ", newUserInfo);
             return store.dispatch(newOnlineUser(newUserInfo));
+        });
+
+        socket.on("displayFriendRequest", (data) => {
+            console.log("socket displayFriendRequest: ", data);
+
+            return store.dispatch(displayFriendRequest(data));
         });
     }
 };

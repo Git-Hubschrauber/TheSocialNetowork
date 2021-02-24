@@ -100,20 +100,22 @@ export default function () {
                                             <img
                                                 src={friends.profile_pic_url}
                                             />
-                                            <div className="buttons">
-                                                <button
-                                                    className="buttons rejectBtn"
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            unfriend(friends.id)
-                                                        )
-                                                    }
-                                                >
-                                                    <span className="emoji">
-                                                        ❌
-                                                    </span>
-                                                </button>
-                                            </div>
+                                        </Link>
+                                        <div className="buttons">
+                                            <button
+                                                className="buttons rejectBtn"
+                                                onClick={() =>
+                                                    dispatch(
+                                                        unfriend(friends.id)
+                                                    )
+                                                }
+                                            >
+                                                <span className="emoji">
+                                                    ❌
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <Link to={"user/" + friends.id}>
                                             <div className="nameTag">
                                                 {friends.first +
                                                     " " +
@@ -167,34 +169,36 @@ export default function () {
                                             <img
                                                 src={friends.profile_pic_url}
                                             />
-                                            <div className="button">
-                                                <button
-                                                    className="acceptBtn"
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            acceptFriendship(
-                                                                friends.id
-                                                            )
+                                        </Link>
+                                        <div className="button">
+                                            <button
+                                                className="acceptBtn"
+                                                onClick={() =>
+                                                    dispatch(
+                                                        acceptFriendship(
+                                                            friends.id
                                                         )
-                                                    }
-                                                >
-                                                    <span className="emoji">
-                                                        ✔️
-                                                    </span>
-                                                </button>
-                                                <button
-                                                    className="rejectBtn"
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            unfriend(friends.id)
-                                                        )
-                                                    }
-                                                >
-                                                    <span className="emoji">
-                                                        ❌
-                                                    </span>
-                                                </button>
-                                            </div>
+                                                    )
+                                                }
+                                            >
+                                                <span className="emoji">
+                                                    ✔️
+                                                </span>
+                                            </button>
+                                            <button
+                                                className="rejectBtn"
+                                                onClick={() =>
+                                                    dispatch(
+                                                        unfriend(friends.id)
+                                                    )
+                                                }
+                                            >
+                                                <span className="emoji">
+                                                    ❌
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <Link to={"user/" + friends.id}>
                                             <div className="nameTag">
                                                 {friends.first +
                                                     " " +
@@ -248,26 +252,24 @@ export default function () {
                                             <img
                                                 src={friends.profile_pic_url}
                                             />
-                                            <div className="buttons">
-                                                <button
-                                                    className="rejectBtn"
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            unfriend(friends.id)
-                                                        )
-                                                    }
-                                                >
-                                                    <span className="emoji">
-                                                        ❌
-                                                    </span>
-                                                </button>
-                                            </div>
-                                            <div className="nameTag">
-                                                {friends.first +
-                                                    " " +
-                                                    friends.last}
-                                            </div>
                                         </Link>
+                                        <div className="buttons">
+                                            <button
+                                                className="rejectBtn"
+                                                onClick={() =>
+                                                    dispatch(
+                                                        unfriend(friends.id)
+                                                    )
+                                                }
+                                            >
+                                                <span className="emoji">
+                                                    ❌
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div className="nameTag">
+                                            {friends.first + " " + friends.last}
+                                        </div>
                                     </div>
                                 ))}
                             </td>

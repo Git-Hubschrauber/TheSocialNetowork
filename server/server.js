@@ -413,7 +413,10 @@ app.post("/api/userInvitation/:id", async (req, res) => {
         const results = await db.makeFriendship(sender_id, recipient_id);
 
         console.log("friendship invitation results: ", results);
-        res.json(results.rows);
+        res.json({
+            sender_id: req.session.userId,
+            recipient_id: req.params.id,
+        });
     } catch (err) {
         console.log("err in /userInvitation", err);
         res.json({ error: true });
@@ -510,6 +513,7 @@ server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
 let onlineUsers = {};
+let requestToIds = [];
 
 io.on("connection", function (socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
@@ -543,10 +547,14 @@ io.on("connection", function (socket) {
         db.getUserInfo(userId).then(({ rows }) => {
             console.log("server - new user joined: ", rows);
             let newUserInfo = rows[0];
-            io.emit("newUserJoined", newUserInfo);
+            socket.broadcast.emit("newUserJoined", newUserInfo);
         });
     }
     onlineUsers[socket.id] = userId;
+
+    otherOnlineUsersIds = [
+        ...new Set(onlineUsersIds.filter((element) => element !== userId)),
+    ];
     //
     //
 
@@ -569,6 +577,20 @@ io.on("connection", function (socket) {
         }
     });
 
+    socket.on("request", (data) => {
+        console.log("notifyFriendRequest in server: ", data);
+        requestToIds.push(parseInt(data));
+    });
+    console.log("requestToIds: ", requestToIds);
+
+    let numberOfRequests = requestToIds.filter((v) => v == userId).length;
+
+    console.log("numberOfRequests: ", numberOfRequests);
+
+    if (numberOfRequests > 0) {
+        socket.emit("displayFriendRequest", numberOfRequests);
+    }
+
     socket.on("disconnect", () => {
         delete onlineUsers[socket.id];
         console.log(
@@ -581,7 +603,7 @@ io.on("connection", function (socket) {
         ];
         db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
             console.log("OtheronlineUsers Data: ", rows);
-            io.emit("whoElseIsOnline", rows);
+            socket.broadcast.emit("whoElseIsOnline", rows);
         });
         console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);
     });

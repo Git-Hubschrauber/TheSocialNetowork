@@ -1,8 +1,12 @@
 import axios from "../axios";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { socket } from "../socket";
+import { notifyFriendRequest } from "../actions";
 
 export default function (props) {
     const id = props.id;
+    const dispatch = useDispatch();
     let friendshipState;
 
     let [friendshipStatus, setfriendshipStatus] = useState("none");
@@ -46,7 +50,8 @@ export default function (props) {
         axios
             .post("/api/userInvitation/" + id)
             .then((data) => {
-                // console.log("response friendship request Client", data);
+                dispatch(notifyFriendRequest(data.data));
+                console.log("response friendship request Client", data);
                 setfriendshipStatus("sent");
             })
             .catch((err) => {

@@ -1,9 +1,11 @@
 import axios from "./axios";
+import { socket } from "./socket";
 
 export async function askForFriendsandRequests() {
     const { data } = await axios.get("/api/friends");
     // console.log("data from askForFriendsAndRequests: ", data.friendships);
     // console.log("data from askForFriendsAndRequests: ", data.loggedUser);
+
     return {
         type: "FRIENDSHIPSTATUS_REQUEST",
         usersForFriendship: data.friendships,
@@ -92,5 +94,21 @@ export function newOnlineUser(newUserInfo) {
     return {
         type: "NEW_ONLINEUSER",
         newUserInfo,
+    };
+}
+
+export function notifyFriendRequest(data) {
+    console.log("actions notifyFriendRequest: ", data);
+    socket.emit("request", data.recipient_id);
+    return {
+        type: "NOTIFY_FRIENDSHIPREQUEST",
+        data,
+    };
+}
+export function displayFriendRequest(data) {
+    console.log("actions displayFriendRequest: ", data);
+    return {
+        type: "NOTIFY_FRIENDSHIPREQUEST_2",
+        data,
     };
 }
