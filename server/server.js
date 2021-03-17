@@ -3,12 +3,10 @@ const app = express();
 
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
-    allowRequest: (req, callback) =>
-        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
-    cors: {
-        origin: "https://thesocialnetowork.herokuapp.com",
-        methods: ["GET", "POST"],
+    allowRequest: (req, callback) => {
+        callback(null, req.headers.referer.startsWith("http://localhost:3000"));
     },
+    origins: "http://localhost:3000 https://thesocialnetowork.herokuapp.com/:*",
 });
 
 const compression = require("compression");
