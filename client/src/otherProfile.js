@@ -21,18 +21,11 @@ export default class OtherProfile extends React.Component {
     }
 
     async componentDidMount() {
-        // console.log("this.props.match.params.id: ", this.props.match.params.id);
         const id = this.props.match.params.id;
 
         axios
             .get("/api/user/" + id)
             .then((resp) => {
-                // console.log("resp. in otherProfile: ", resp.data);
-                // console.log(
-                //     "friendship in otherProfile: ",
-                //     resp.data.friendship
-                // );
-                // console.log("this.state.friendship1: ", this.state.friendship);
                 if (this.props.match.params.id == resp.data.loggedUser) {
                     this.props.history.push("/");
                 }
@@ -57,7 +50,6 @@ export default class OtherProfile extends React.Component {
                     bio: resp.data.userInfo.bio,
                     friendship: resp.data.friendship,
                 });
-                // console.log("this.state.friendship2: ", this.state.friendship);
             })
             .catch((err) => {
                 console.log("err in otherProfile", err);

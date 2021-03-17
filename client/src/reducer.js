@@ -43,10 +43,6 @@ export function reducer(state = {}, action) {
     }
 
     if (action.type === "OTHERS_ONLINEUSERS") {
-        console.log(
-            "action.otherOnlineUsersData: ",
-            action.otherOnlineUsersData
-        );
         state = {
             ...state,
             otherOnlineUsers: action.otherOnlineUsersData,
@@ -60,17 +56,15 @@ export function reducer(state = {}, action) {
         };
     }
     if (action.type === "NOTIFY_FRIENDSHIPREQUEST") {
-        console.log("NOTIFY_FRIENDSHIPREQUEST Reducer here");
         state = {
             ...state,
             request_data: action.data,
         };
     }
     if (action.type === "NOTIFY_FRIENDSHIPREQUEST_2") {
-        console.log("NOTIFY_FRIENDSHIPREQUEST_2 Reducer here: ", action.data);
         state = {
             ...state,
-            request_data_2: action.data,
+            request_data_2: action.data_2,
         };
     }
 

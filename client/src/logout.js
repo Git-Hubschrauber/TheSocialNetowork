@@ -5,7 +5,6 @@ function logout() {
     axios
         .post("/api/logout")
         .then(() => {
-            console.log("logout done");
             location.pathname = "/welcome";
         })
         .catch((err) => console.log("error in Logout", err));

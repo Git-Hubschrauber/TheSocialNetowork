@@ -12,17 +12,14 @@ export default class BioEditor extends React.Component {
     }
 
     toggleEditingMode() {
-        console.log(" toggleEditingMode clicked: ", this.editingMode);
         this.setState({ editingMode: !this.state.editingMode });
     }
 
     submitBio() {
-        console.log("submit clicked", this.state.bio);
         const userInput = this.state;
         axios
             .post("/editBio", userInput)
             .then((resp) => {
-                console.log("resp from server: ", resp);
                 let error = resp.data.error;
                 if (error) {
                     console.log("error from server");
@@ -31,7 +28,6 @@ export default class BioEditor extends React.Component {
                         noBioInfo: true,
                     });
                 } else {
-                    console.log("resp from server no error: ", resp.data);
                     this.toggleEditingMode();
                     const newProps = resp.data;
                     this.props.componentDidUpdate2(newProps);

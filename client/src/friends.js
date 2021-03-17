@@ -15,7 +15,6 @@ export default function () {
             state.usersForFriendship &&
             state.usersForFriendship.filter((user) => {
                 if (user.accepted === false && user.id === user.recipient_id) {
-                    // console.log("accepted false + send: ", user);
                     return user;
                 }
             })
@@ -26,7 +25,6 @@ export default function () {
             state.usersForFriendship &&
             state.usersForFriendship.filter((user) => {
                 if (user.accepted === true) {
-                    // console.log("accepted true: ", user);
                     return user;
                 }
             })
@@ -36,22 +34,11 @@ export default function () {
             state.usersForFriendship &&
             state.usersForFriendship.filter((user) => {
                 if (user.accepted === false && user.id === user.sender_id) {
-                    // console.log("accepted false + received: ", user);
                     return user;
                 }
             })
     );
-    // console.log("friends.js here");
 
-    // console.log("friends.js here - friends: ", friends);
-    // console.log(
-    //     "friends.js here - sendfriendshipRequests: ",
-    //     sendfriendshipRequests
-    // );
-    // console.log(
-    //     "friends.js here - receivedfriendshipRequests: ",
-    //     receivedfriendshipRequests
-    // );
     if (!friends) {
         return null;
     }

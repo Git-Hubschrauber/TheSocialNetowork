@@ -33,7 +33,6 @@ export default function () {
     useEffect(() => {
         if (otherOnlineUsers) {
             console.log("newUser in chat");
-            // otherOnlineUsers = [...new Set(otherOnlineUsers)];
         }
     }, [otherOnlineUsers]);
 
@@ -48,8 +47,6 @@ export default function () {
     if (!lastTenMessages) {
         return null;
     }
-
-    console.log("otherOnlineUsers in chat: ", otherOnlineUsers);
 
     let existingMessages;
 

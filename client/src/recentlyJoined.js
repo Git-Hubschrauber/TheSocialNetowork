@@ -9,16 +9,12 @@ export default function ({ x }) {
         (async () => {
             try {
                 const { data } = await axios.post("/api/users");
-                // console.log("data newUsers: ", data);
-
                 setnewUsers(data);
             } catch (err) {
                 console.log(err);
             }
         })();
     }, [x]);
-
-    // console.log("newUsers: ", newUsers);
 
     return (
         <div className="recentlyJoined">

@@ -22,7 +22,6 @@ export default class Login extends React.Component {
     }
 
     handleClick() {
-        console.log("submit clicked in Login", this.state);
         const userInput = this.state;
         this.setState({
             error: false,
@@ -30,7 +29,6 @@ export default class Login extends React.Component {
         axios
             .post("/login/userlogin", userInput)
             .then((resp) => {
-                console.log("resp from server in Login: ", resp);
                 let error = resp.data.error;
                 if (error) {
                     console.log("error from server in Login");
@@ -38,10 +36,6 @@ export default class Login extends React.Component {
                         error: true,
                     });
                 } else {
-                    console.log(
-                        "resp from server: no error in Login: ",
-                        resp.data
-                    );
                     location.replace("/");
                 }
             })

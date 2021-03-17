@@ -15,7 +15,7 @@ const { hash, compare } = require("./bc");
 const csurf = require("csurf");
 const { sendEmail } = require("./ses");
 const cryptoRandomString = require("crypto-random-string");
-
+const s3 = require("./s3");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 
@@ -53,11 +53,6 @@ io.use(function (socket, next) {
     cookieSessionMiddleware(socket.request, socket.request.res, next);
 });
 
-// app.use(
-//     express.urlencoded({
-//         extended: false,
-//     })
-// );
 app.use(express.json());
 
 app.use(csurf());
@@ -111,7 +106,6 @@ app.post("/registration", (req, res) => {
                     password
                 )
                     .then((results) => {
-                        console.log("userId: ", results.rows[0].id);
                         req.session.userId = results.rows[0].id;
                         res.json(results.rows[0].id);
                     })
@@ -129,7 +123,6 @@ app.post("/registration", (req, res) => {
 });
 
 app.post("/login/userlogin", (req, res) => {
-    console.log("/login post route here: ", req.body.email);
     db.checkEmailRegistration(req.body.email)
         .then((results) => {
             let checkedEmail = results.rows[0].email;
@@ -175,12 +168,7 @@ app.post("/login/userlogin", (req, res) => {
 
 app.get("/api/loggedUser", async (req, res) => {
     const userId = req.session.userId;
-    // console.log("id in /api/user: ", req.session.userId);
-    // console.log("req.body in /api/user: ", req.body);
-    // console.log("req.params in /api/user: ", req.params);
     let results = await db.getUserInfo(userId);
-    // console.log("/user results: ", results.rows[0]);
-
     res.json(results.rows[0]);
 });
 
@@ -191,26 +179,19 @@ app.get("/api/loggedUser", async (req, res) => {
 //
 
 app.post("/password/reset/start", (req, res) => {
-    console.log("PW reset start route here");
-
     const emailToReset = req.body.email;
-    console.log("email to reset: ", emailToReset);
-
     db.checkEmailRegistration(emailToReset)
         .then((results) => {
-            console.log("email from db: ", results.rows[0].email);
             let checkedEmail = results.rows[0].email;
             let check = checkedEmail == emailToReset;
 
             if (check) {
-                console.log("email EXISTS: ", check);
                 const secretCode = cryptoRandomString({
                     length: 6,
                 });
                 console.log("secretCode for PWreset:", secretCode);
                 db.saveSecretCode(emailToReset, secretCode)
                     .then(() => {
-                        console.log("Insert code into db");
                         const message =
                             "Please enter the following code: " + secretCode;
                         const subject = "Password reset for your account";
@@ -238,12 +219,9 @@ app.post("/password/reset/start", (req, res) => {
 });
 
 app.post("/password/reset/verify", (req, res) => {
-    console.log("PW reset verify route here");
-    console.log(req.body);
     const { code, email, newPassword } = req.body;
     db.checkCode(code, email)
         .then((result) => {
-            console.log("result for codeCheck", result.rows);
             if (!result.rows) {
                 console.log("err2 in checkCod2e");
                 return res.json({ error: true });
@@ -274,20 +252,13 @@ app.post("/password/reset/verify", (req, res) => {
 });
 
 //
-app.post("/upload", uploader.single("file"), async (req, res) => {
+app.post("/upload", uploader.single("file"), s3.upload, async (req, res) => {
     const userId = req.session.userId;
-    console.log("id in /upload: ", userId);
-    console.log("filename in /upload: ", req.file.filename);
-    console.log("/upload here");
-
-    const url = req.file.filename;
-    console.log("url in /upload: ", url);
-
+    const url =
+        "https://s3.amazonaws.com/adoboimageboard2021/" + req.file.filename;
     if (req.file) {
         await db.insertImageUrl(userId, url);
         let results2 = await db.getUserInfo(userId);
-        console.log("upload results: ", results2.rows);
-
         res.json({
             url: results2.rows[0].profile_pic_url,
         });
@@ -300,12 +271,10 @@ app.post("/upload", uploader.single("file"), async (req, res) => {
 
 app.post("/deleteProfilePicture", async (req, res) => {
     const userId = req.session.userId;
+    let result = await db.getUserInfo(userId);
+    await s3.deleteFromAWS(result.rows[0].profile_pic_url);
     const def = ["/default.png"];
-    console.log("id in /delete: ", userId);
-    console.log("/delete here");
-
     await db.deleteImage(userId, def);
-
     res.json({
         sucess: true,
     });
@@ -313,18 +282,13 @@ app.post("/deleteProfilePicture", async (req, res) => {
 
 app.post("/api/deleteAccount", async (req, res) => {
     const userId = req.session.userId;
-
-    console.log("/delete account here");
-
     try {
+        let result = await db.getUserInfo(userId);
+        await s3.deleteFromAWS(result.rows[0].url);
         await db.deleteAccountChat(userId);
         await db.deleteAccountFriendships(userId);
         await db.deleteAccountUsers(userId);
-
         req.session = null;
-
-        console.log("account deletion successful");
-
         return res.redirect("/welcome");
     } catch (err) {
         console.log("error in server deleteAccount: ", err);
@@ -336,17 +300,10 @@ app.post("/api/deleteAccount", async (req, res) => {
 //
 
 app.post("/editBio", async (req, res) => {
-    console.log("/editBio here");
     const userId = req.session.userId;
-    console.log("id in /editBio: ", userId);
-    console.log("req.body in /editBio: ", req.body);
-
-    console.log("bio in /editBio: ", req.body.bio);
     await db.insertBio(userId, req.body.bio);
     let results = await db.getUserInfo(userId);
-    console.log("editBio results: ", results.rows[0]);
     const resBio = results.rows[0].bio;
-    console.log("editBio resBio: ", resBio);
     res.json(resBio);
 });
 //
@@ -380,10 +337,7 @@ app.get("/api/user/:id", async (req, res) => {
 //
 
 app.post("/api/users", async (req, res) => {
-    console.log("/api/users here");
     const results = await db.getNewUsers();
-
-    // console.log("server: recentlyJoined: ", results.rows);
     res.json(results.rows);
 });
 
@@ -393,13 +347,8 @@ app.post("/api/users", async (req, res) => {
 //
 
 app.post("/api/searchUsers/:searchedUser", async (req, res) => {
-    console.log("req.body: ", req.body);
-    console.log(" req.params.searchedUser: ", req.params.searchedUser);
-
     let val = req.params.searchedUser;
     let results = await db.searchUsers(val);
-    console.log("/searchuser results: ", results.rows);
-
     res.json(results.rows);
 });
 //
@@ -411,8 +360,6 @@ app.post("/api/userInvitation/:id", async (req, res) => {
     const recipient_id = req.params.id;
     try {
         const results = await db.makeFriendship(sender_id, recipient_id);
-
-        console.log("friendship invitation results: ", results);
         res.json({
             sender_id: req.session.userId,
             recipient_id: req.params.id,
@@ -429,8 +376,6 @@ app.post("/api/acceptInvitation/:id", async (req, res) => {
     try {
         await db.acceptFriendship(recipient_id, sender_id);
         const results = await db.getFriendshipStatus(sender_id, recipient_id);
-
-        console.log("accept invitation results: ", results.rows);
         res.json(results.rows);
     } catch (err) {
         console.log("err in /acceptInvitation", err);
@@ -452,10 +397,8 @@ app.post("/api/cancelInvitation/:id", async (req, res) => {
 
 app.get("/api/friends/", async (req, res) => {
     const loggedId = req.session.userId;
-
     try {
         const { rows } = await db.getFriendsandRequests(loggedId);
-
         res.json({ friendships: rows, loggedUser: loggedId });
     } catch (err) {
         console.log("err in /friends", err);
@@ -466,12 +409,7 @@ app.get("/api/friends/", async (req, res) => {
 app.get("/api/friend/:id", async (req, res) => {
     try {
         const { rows } = await db.getUserInfo(req.params.id);
-        console.log("results in /friends/id", rows);
-
         res.json(rows);
-
-        // console.log("friends: ", friends);
-        // res.json({ results: friends });
     } catch (err) {
         console.log("err in /friend/id", err);
         res.json({ error: true });
@@ -481,7 +419,6 @@ app.get("/api/friend/:id", async (req, res) => {
 app.get("/api/viewFriends/:id", async (req, res) => {
     try {
         const { rows } = await db.getOthersFriends(req.params.id);
-        // console.log("server results in /viewfriends", rows);
         res.json(rows.reverse());
     } catch (err) {
         console.log("err in /friends", err);
@@ -505,10 +442,6 @@ app.get("*", function (req, res) {
 //
 //
 
-// app.listen(process.env.PORT || 3001, function () {
-//     console.log("I'm listening.");
-// });
-
 server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
@@ -522,7 +455,6 @@ io.on("connection", function (socket) {
 
     if (!socket.request.session.userId) {
         console.log("socket disconnected");
-
         return socket.disconnect(true);
     }
 
@@ -530,22 +462,17 @@ io.on("connection", function (socket) {
     //
     //
 
-    console.log("onlineUsers in server: ", Object.values(onlineUsers));
     let onlineUsersIds = Object.values(onlineUsers);
     let otherOnlineUsersIds = [
         ...new Set(onlineUsersIds.filter((element) => element !== userId)),
     ];
 
-    console.log("otherOnlineUsers in server: ", otherOnlineUsersIds);
     db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
-        console.log("OtheronlineUsers Data: ", rows);
         socket.emit("whoElseIsOnline", rows);
     });
 
     if (!onlineUsersIds.includes(userId)) {
-        console.log("newUser joined: ", userId);
         db.getUserInfo(userId).then(({ rows }) => {
-            console.log("server - new user joined: ", rows);
             let newUserInfo = rows[0];
             socket.broadcast.emit("newUserJoined", newUserInfo);
         });
@@ -567,10 +494,8 @@ io.on("connection", function (socket) {
 
     socket.on("chatMessage", async (msg) => {
         try {
-            console.log("msg-data: ", msg);
             await db.insertMessage(userId, msg);
             const { rows } = await db.getLastMessageInfo();
-            console.log("sender Info: ", rows[0]);
             io.emit("newMessage", rows[0]);
         } catch (err) {
             console.log("err in server socket chatMessage", err);
@@ -578,14 +503,10 @@ io.on("connection", function (socket) {
     });
 
     socket.on("request", (data) => {
-        console.log("notifyFriendRequest in server: ", data);
         requestToIds.push(parseInt(data));
     });
-    console.log("requestToIds: ", requestToIds);
 
     let numberOfRequests = requestToIds.filter((v) => v == userId).length;
-
-    console.log("numberOfRequests: ", numberOfRequests);
 
     if (numberOfRequests > 0) {
         socket.emit("displayFriendRequest", numberOfRequests);
@@ -593,18 +514,13 @@ io.on("connection", function (socket) {
 
     socket.on("disconnect", () => {
         delete onlineUsers[socket.id];
-        console.log(
-            "onlineUsers in server after a disconnect: ",
-            Object.values(onlineUsers)
-        );
+
         onlineUsersIds = Object.values(onlineUsers);
         otherOnlineUsersIds = [
             ...new Set(onlineUsersIds.filter((element) => element !== userId)),
         ];
         db.getOnlineUsers(otherOnlineUsersIds).then(({ rows }) => {
-            console.log("OtheronlineUsers Data: ", rows);
             socket.broadcast.emit("whoElseIsOnline", rows);
         });
-        console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);
     });
 });

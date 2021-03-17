@@ -13,7 +13,6 @@ import Chat from "./chat";
 import Notification from "./hooks/notification";
 
 import { BrowserRouter, Route } from "react-router-dom";
-// import BioEditor from "./bio-editor";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -30,18 +29,14 @@ export default class App extends React.Component {
         };
         this.toggleUploader = this.toggleUploader.bind(this);
         this.setProfilePictureUrl = this.setProfilePictureUrl.bind(this);
-        // this.componentDidUpdate = this.componentDidUpdate.bind(this);
         this.componentDidUpdate2 = this.componentDidUpdate2.bind(this);
     }
 
     async componentDidMount() {
         const response = await axios.get("/api/loggedUser");
-        console.log("app mounted + response: ", response.data);
-        console.log("app mounted: bio: ", response.data.bio);
         const { first, last, profile_pic_url, bio } = response.data;
 
         if (response.data.bio === null || response.data.bio.length == 2) {
-            console.log("no bio info");
             return this.setState({
                 firstName: first,
                 lastName: last,
@@ -60,19 +55,10 @@ export default class App extends React.Component {
     }
 
     async componentDidUpdate(prev) {
-        // if (!this.state.ProfilePictureUrl) {
-        //     this.setState({
-        //         ProfilePictureUrl: "default.png",
-        //     });
-        //     return;
-        // }
         if (!prev[0]) {
-            console.log("prev empty");
-
             return;
         }
         if (this.state.ProfilePictureUrl !== prev) {
-            console.log("profile picture changes: ", prev);
             this.setState({
                 ProfilePictureUrl: prev,
             });
@@ -87,9 +73,6 @@ export default class App extends React.Component {
             });
         }
         if (this.state.bio !== newProps) {
-            console.log("profile data changed: ", newProps);
-            console.log("profile data new: ", newProps);
-            console.log("profile data old: ", this.state.bio);
             this.setState({
                 bio: newProps,
                 noBioInfo: false,
@@ -98,7 +81,6 @@ export default class App extends React.Component {
     }
 
     toggleUploader() {
-        console.log("toggleUploader clicked");
         this.setState({
             uploaderVisible: !this.state.uploaderVisible,
         });
@@ -110,7 +92,6 @@ export default class App extends React.Component {
             uploaderVisible: !this.state.uploaderVisible,
         });
         this.componentDidUpdate(newUrl);
-        console.log("new profile picture uploaded: ", newUrl);
     }
 
     render() {
@@ -118,11 +99,8 @@ export default class App extends React.Component {
             <BrowserRouter>
                 <div className="app">
                     <header>
-                        <h1
-                            className="darknet"
-                            data-text="The Dark Social Network"
-                        >
-                            The Dark Social Network
+                        <h1 className="darknet" data-text="The Social Network">
+                            The Social Network
                         </h1>
                         <Logout />
                         <Logo />
@@ -130,7 +108,6 @@ export default class App extends React.Component {
 
                     <div className="profilePictureElem">
                         <ProfilePicture
-                            // key={this.state.ProfilePictureUrl}
                             ProfilePictureUrl={this.state.ProfilePictureUrl}
                             toggleUploader={this.toggleUploader}
                             firstName={this.state.firstName}

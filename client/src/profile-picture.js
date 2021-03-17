@@ -5,11 +5,6 @@ export default function ({
     toggleUploader,
     size = "",
 }) {
-    console.log(
-        "props.profilePictureUrl in profilepicture: ",
-        ProfilePictureUrl
-    );
-
     if (!ProfilePictureUrl) {
         ProfilePictureUrl = "/default.png";
     }
@@ -29,11 +24,4 @@ export default function ({
             className={size}
         />
     );
-}
-
-{
-    /* <div>
-            <label>{firstName + " " + lastName}</label>
-        </div>
-    </div> */
 }

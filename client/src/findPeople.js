@@ -14,7 +14,6 @@ export default function () {
                 const { data } = await axios.post(
                     "/api/searchUsers/" + searchedUser
                 );
-                console.log("data searchUsers: ", data);
                 if (!abort) {
                     setSearchUsers(data);
                 }
@@ -26,8 +25,6 @@ export default function () {
             abort = true;
         };
     }, [searchedUser]);
-
-    console.log("searchUsers: ", searchUsers);
 
     return (
         <div>

@@ -16,20 +16,16 @@ export default class Uploader extends React.Component {
     }
 
     async delete() {
-        console.log("delete clicked");
         const a = "default.png";
         let response = await axios.post("/deleteProfilePicture", a);
-        console.log("resp in delete: ", response);
         await this.props.setProfilePictureUrl("default.png");
     }
 
     async submit() {
-        console.log("upload clicked");
         const formData = new FormData();
         formData.append("file", this.file);
         // this.file = "";
         let response = await axios.post("/upload", formData);
-        console.log("url in uploader: ", response.data.url);
         await this.props.setProfilePictureUrl(response.data.url);
     }
 

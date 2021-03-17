@@ -6,7 +6,7 @@ import ResetPassword from "./resetpassword";
 export default function Welcome() {
     return (
         <div>
-            <h1 className="welcome">Welcome on my social network</h1>
+            <h1 className="welcome">Welcome on the social network</h1>
             <img src="/linux.jpg" />
             <HashRouter>
                 <div>

@@ -15,8 +15,6 @@ export default class Registration extends React.Component {
     }
 
     handleChange(e) {
-        // console.log("change happens: ", e.target.value);
-        // console.log("e.target.name: ", e.target.name);
         this.setState(
             {
                 [e.target.name]: e.target.value,
@@ -26,12 +24,10 @@ export default class Registration extends React.Component {
     }
 
     handleClick() {
-        console.log("submit clicked", this.state);
         const userInput = this.state;
         axios
             .post("/registration", userInput)
             .then((resp) => {
-                console.log("resp from server: ", resp);
                 let error = resp.data.error;
                 if (error) {
                     console.log("error from server");
@@ -39,7 +35,6 @@ export default class Registration extends React.Component {
                         error: true,
                     });
                 } else {
-                    console.log("resp from server no error: ", resp.data);
                     location.replace("/");
                 }
             })

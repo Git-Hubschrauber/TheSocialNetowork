@@ -6,9 +6,7 @@ import reduxPromise from "redux-promise";
 import { reducer } from "./reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import App from "./app";
-// import { io } from "socket.io-client";
 import { init } from "./socket";
-// const socket = io.connect();
 
 const store = createStore(
     reducer,

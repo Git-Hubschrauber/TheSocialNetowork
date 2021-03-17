@@ -12,8 +12,6 @@ export default class ResetPassword extends React.Component {
     }
 
     handleChange(e) {
-        // console.log("change happens: ", e.target.value);
-        // console.log("e.target.name: ", e.target.name);
         this.setState(
             {
                 [e.target.name]: e.target.value,
@@ -23,12 +21,10 @@ export default class ResetPassword extends React.Component {
     }
 
     handleClick1() {
-        console.log("submit1 clicked", this.state);
         const userInput = this.state;
         axios
             .post("/password/reset/start", userInput)
             .then((resp) => {
-                console.log("resp from server: ", resp);
                 let error = resp.data.error;
                 if (error) {
                     console.log("error from server");
@@ -36,7 +32,6 @@ export default class ResetPassword extends React.Component {
                         error: true,
                     });
                 } else {
-                    console.log("resp from server no error: ", resp.data);
                     this.setState({
                         renderView: this.state.renderView + 1,
                         error: false,
@@ -49,12 +44,10 @@ export default class ResetPassword extends React.Component {
     }
 
     handleClick2() {
-        console.log("submit2 clicked", this.state);
         const userInput = this.state;
         axios
             .post("/password/reset/verify", userInput)
             .then((resp) => {
-                console.log("resp from server: ", resp);
                 let error = resp.data.error;
                 if (error) {
                     console.log("error from server");
@@ -62,7 +55,6 @@ export default class ResetPassword extends React.Component {
                         error: true,
                     });
                 } else {
-                    console.log("resp from server no error: ", resp.data);
                     this.setState({
                         renderView: this.state.renderView + 1,
                         error: false,
@@ -126,7 +118,7 @@ export default class ResetPassword extends React.Component {
         return (
             <div>
                 <h1>Reset Password</h1>
-                {this.renderViewSelector()}{" "}
+                {this.renderViewSelector()}
                 {this.state.error && <p className="error">An error occurred</p>}
                 <p>
                     Back to <Link to="/login">LOGIN</Link>

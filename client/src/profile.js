@@ -32,7 +32,6 @@ export default function Profile(props) {
                 noBioInfo={props.noBioInfo}
                 componentDidUpdate2={props.componentDidUpdate2}
             />
-            {/* <Friends /> */}
         </div>
     );
 }
