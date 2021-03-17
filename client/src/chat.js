@@ -44,13 +44,9 @@ export default function () {
         setMsg(event.target.value);
     }
 
-    if (!lastTenMessages) {
-        return null;
-    }
-
     let existingMessages;
 
-    if (lastTenMessages.length === 0) {
+    if (!lastTenMessages || lastTenMessages.length === 0) {
         existingMessages = <h2>No messages</h2>;
     } else {
         existingMessages = (
