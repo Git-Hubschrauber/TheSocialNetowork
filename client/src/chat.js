@@ -12,17 +12,14 @@ export default function () {
 
     const lastTenMessages = useSelector((state) => state.messages);
     const otherOnlineUsers = useSelector((state) => state.otherOnlineUsers);
-    const scrollToBottom = () => {
-        scrollRef.current.scrollTop =
-            scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-    };
 
     //
     //
 
     useEffect(() => {
-        if (lastTenMessages) {
-            scrollToBottom();
+        if (lastTenMessages && scrollRef.current) {
+            scrollRef.current.scrollTop =
+                scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
         }
     }, [lastTenMessages]);
 
