@@ -10,7 +10,6 @@ import FindPeople from "./findPeople";
 import { Link } from "react-router-dom";
 import Friends from "./friends";
 import Chat from "./chat";
-import Notification from "./hooks/notification";
 
 import { BrowserRouter, Route } from "react-router-dom";
 
@@ -117,7 +116,7 @@ export default class App extends React.Component {
                         <h1>
                             {this.state.firstName + " " + this.state.lastName}
                         </h1>
-                        <Notification />
+
                         <h2>
                             <Link to="/friends">Friends and invitations</Link>
                         </h2>

@@ -34,8 +34,8 @@ export const init = (store) => {
             return store.dispatch(newOnlineUser(newUserInfo));
         });
 
-        socket.on("displayFriendRequest", (data_2) => {
-            return store.dispatch(displayFriendRequest(data_2));
-        });
+        // socket.on("displayFriendRequest", (data_2) => {
+        //     return store.dispatch(displayFriendRequest(data_2));
+        // });
     }
 };

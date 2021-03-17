@@ -502,15 +502,15 @@ io.on("connection", function (socket) {
         }
     });
 
-    socket.on("request", (data) => {
-        requestToIds.push(parseInt(data));
-    });
+    // socket.on("request", (data) => {
+    //     requestToIds.push(parseInt(data));
+    // });
 
-    let numberOfRequests = requestToIds.filter((v) => v == userId).length;
+    // let numberOfRequests = requestToIds.filter((v) => v == userId).length;
 
-    if (numberOfRequests > 0) {
-        socket.emit("displayFriendRequest", numberOfRequests);
-    }
+    // if (numberOfRequests > 0) {
+    //     socket.emit("displayFriendRequest", numberOfRequests);
+    // }
 
     socket.on("disconnect", () => {
         delete onlineUsers[socket.id];

@@ -79,7 +79,7 @@ export default function () {
     }
 
     let online;
-    if (otherOnlineUsers.length === 0) {
+    if (!otherOnlineUsers || otherOnlineUsers.length === 0) {
         online = <h1>No other user online</h1>;
     } else {
         online = (
